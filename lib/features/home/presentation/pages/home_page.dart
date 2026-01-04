@@ -10,6 +10,8 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final counterBloc = BlocProvider.of<CounterBloc>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -31,14 +33,27 @@ class MyHomePage extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        tooltip: 'Increment',
-        child: const Icon(Icons.navigate_next_rounded),
-        onPressed: () {
-          Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => IncDecPage()));
-        },
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            tooltip: 'Restart',
+            child: const Icon(Icons.restart_alt),
+            onPressed: () {
+              counterBloc.add(CounterRestarted());
+            },
+          ),
+          SizedBox(height: 10),
+          FloatingActionButton(
+            tooltip: 'Increment',
+            child: const Icon(Icons.navigate_next_rounded),
+            onPressed: () {
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (context) => IncDecPage()));
+            },
+          ),
+        ],
       ),
     );
   }
