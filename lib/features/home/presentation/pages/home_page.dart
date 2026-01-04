@@ -1,3 +1,4 @@
+import 'package:auth_app/core/theme/app_button_styles.dart';
 import 'package:auth_app/features/home/presentation/bloc/counter_bloc.dart';
 import 'package:auth_app/features/home/presentation/pages/inc_dec_page.dart';
 import 'package:flutter/material.dart';
@@ -11,17 +12,6 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final counterBloc = BlocProvider.of<CounterBloc>(context);
-
-    final buttonStyle = ButtonStyle(
-      backgroundColor: WidgetStateProperty.all(Colors.blue),
-      foregroundColor: WidgetStateProperty.all(Colors.white),
-      padding: WidgetStateProperty.all(
-        const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      ),
-      shape: WidgetStateProperty.all(
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
 
     return Scaffold(
       appBar: AppBar(
@@ -46,7 +36,7 @@ class MyHomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).pushNamed('/todo-list');
               },
-              style: buttonStyle,
+              style: AppButtonStyles.buttonStyle,
               child: const Text('Go to Todo List'),
             ),
           ],

@@ -1,4 +1,8 @@
+import 'package:auth_app/core/theme/app_button_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../cubit/todo_cubit.dart';
 
 class AddTodoPage extends StatefulWidget {
   const AddTodoPage({super.key});
@@ -12,16 +16,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
 
   @override
   Widget build(BuildContext context) {
-    final buttonStyle = ButtonStyle(
-      backgroundColor: WidgetStateProperty.all(Colors.blue),
-      foregroundColor: WidgetStateProperty.all(Colors.white),
-      padding: WidgetStateProperty.all(
-        const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      ),
-      shape: WidgetStateProperty.all(
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
+    final todoCubit = BlocProvider.of<TodoCubit>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -43,12 +38,21 @@ class _AddTodoPageState extends State<AddTodoPage> {
               ),
             ),
             SizedBox(height: 16),
-
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pushNamed('/todo-list');
+                if (_todoController.text.isNotEmpty) {
+                  todoCubit.addTodo(_todoController.text.trim());
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(const SnackBar(content: Text("Todo added")));
+                  _todoController.clear();
+                } else {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(const SnackBar(content: Text("Please write something!")));
+                }
               },
-              style: buttonStyle,
+              style: AppButtonStyles.buttonStyle,
               child: const Text('Go to Todo List'),
             ),
           ],

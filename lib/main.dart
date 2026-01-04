@@ -1,5 +1,6 @@
 import 'package:auth_app/features/home/presentation/bloc/counter_bloc.dart';
 import 'package:auth_app/features/home/presentation/cubit/counter_cubit.dart';
+import 'package:auth_app/features/todo/presentation/cubit/todo_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => CounterCubit()),
         BlocProvider(create: (_) => CounterBloc()),
+        BlocProvider(create: (_) => TodoCubit()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
