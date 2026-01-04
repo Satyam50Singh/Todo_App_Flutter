@@ -12,6 +12,17 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final counterBloc = BlocProvider.of<CounterBloc>(context);
 
+    final buttonStyle = ButtonStyle(
+      backgroundColor: WidgetStateProperty.all(Colors.blue),
+      foregroundColor: WidgetStateProperty.all(Colors.white),
+      padding: WidgetStateProperty.all(
+        const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      ),
+      shape: WidgetStateProperty.all(
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -29,6 +40,14 @@ class MyHomePage extends StatelessWidget {
                   style: Theme.of(context).textTheme.headlineMedium,
                 );
               },
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/todo-list');
+              },
+              style: buttonStyle,
+              child: const Text('Go to Todo List'),
             ),
           ],
         ),
