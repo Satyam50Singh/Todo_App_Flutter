@@ -39,6 +39,13 @@ class MyHomePage extends StatelessWidget {
               style: AppButtonStyles.buttonStyle,
               child: const Text('Go to Todo List'),
             ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/login');
+              },
+              style: AppButtonStyles.buttonStyle,
+              child: const Text('Login'),
+            ),
           ],
         ),
       ),
