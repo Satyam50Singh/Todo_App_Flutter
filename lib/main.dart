@@ -1,3 +1,4 @@
+import 'package:auth_app/features/auth/login/presentation/bloc/auth_bloc.dart';
 import 'package:auth_app/features/home/presentation/bloc/counter_bloc.dart';
 import 'package:auth_app/features/home/presentation/cubit/counter_cubit.dart';
 import 'package:auth_app/features/todo/presentation/cubit/todo_cubit.dart';
@@ -24,15 +25,16 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => CounterCubit()),
         BlocProvider(create: (_) => CounterBloc()),
         BlocProvider(create: (_) => TodoCubit()),
+        BlocProvider(create: (_) => AuthBloc()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-        home: const MyHomePage(title: 'Flutter Demo Home Page'),
+        home: const LoginScreen(),
         routes: {
+          '/login': (_) => const LoginScreen(),
           '/todo-list': (_) => const TodoList(),
           '/add-todo-page': (_) => const AddTodoPage(),
-          '/login': (_) => const LoginScreen(),
         },
       ),
     );

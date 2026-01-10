@@ -1,9 +1,13 @@
 import 'package:auth_app/core/theme/pallete.dart';
-import 'package:auth_app/features/auth/login/presentation/widgets/gradient_button.dart';
-import 'package:auth_app/features/auth/login/presentation/widgets/login_field.dart';
-import 'package:auth_app/features/auth/login/presentation/widgets/social_button.dart';
+import 'package:auth_app/features/todo/presentation/pages/todo_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../bloc/auth_bloc.dart';
+import '../widgets/gradient_button.dart';
+import '../widgets/login_field.dart';
+import '../widgets/social_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -31,43 +35,91 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         child: Scaffold(
           body: SafeArea(
-            child: SingleChildScrollView(
-              child: Center(
-                child: Column(
+            child: BlocConsumer<AuthBloc, AuthState>(
+              listener: (context, state) {
+                if (state is AuthFailure) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.errorMessage ?? 'Login failed.'),
+                    ),
+                  );
+                }
+
+                if (state is AuthSuccess) {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const TodoList()),
+                    (route) => false,
+                  );
+                }
+              },
+              builder: (context, state) {
+                return Stack(
                   children: [
-                    Image.asset('assets/images/sign_in_balls.png'),
-                    const Text(
-                      'Sign in',
-                      style: TextStyle(
-                        fontSize: 50,
-                        fontWeight: FontWeight.bold,
+                    SingleChildScrollView(
+                      child: Center(
+                        child: Column(
+                          children: [
+                            Image.asset('assets/images/sign_in_balls.png'),
+                            const Text(
+                              'Sign in',
+                              style: TextStyle(
+                                fontSize: 50,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 50),
+                            const SocialButton(
+                              iconPath: 'assets/svgs/f_logo.s vg',
+                              labelText: 'Continue with Facebook',
+                              horizontalPadding: 80,
+                            ),
+                            const SizedBox(height: 15),
+                            const SocialButton(
+                              iconPath: "assets/svgs/g_logo.svg",
+                              labelText: 'Continue with Google',
+                            ),
+                            const SizedBox(height: 15),
+                            const Text("Or", style: TextStyle(fontSize: 17)),
+                            const SizedBox(height: 15),
+                            LoginField(
+                              hintText: 'Email',
+                              controller: emailController,
+                            ),
+                            const SizedBox(height: 15),
+                            LoginField(
+                              hintText: 'Password',
+                              controller: passwordController,
+                            ),
+                            const SizedBox(height: 30),
+                            GradientButton(
+                              onPressed: () {
+                                BlocProvider.of<AuthBloc>(context).add(
+                                  AuthLoginRequested(
+                                    email: emailController.text.trim(),
+                                    password: passwordController.text.trim(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 50),
-                    const SocialButton(
-                      iconPath: 'assets/svgs/f_logo.s vg',
-                      labelText: 'Continue with Facebook',
-                      horizontalPadding: 80,
-                    ),
-                    const SizedBox(height: 15),
-                    const SocialButton(
-                      iconPath: "assets/svgs/g_logo.svg",
-                      labelText: 'Continue with Google',
-                    ),
-                    const SizedBox(height: 15),
-                    const Text("Or", style: TextStyle(fontSize: 17)),
-                    const SizedBox(height: 15),
-                    LoginField(hintText: 'Email', controller: emailController),
-                    const SizedBox(height: 15),
-                    LoginField(
-                      hintText: 'Password',
-                      controller: passwordController,
-                    ),
-                    const SizedBox(height: 30),
-                    GradientButton(),
+
+                    if (state is AuthLoading)
+                      Positioned.fill(
+                        child: AbsorbPointer(
+                          absorbing: true,
+                          child: Container(
+                            color: Colors.black.withOpacity(0.5),
+                            child: Center(child: CircularProgressIndicator()),
+                          ),
+                        ),
+                      ),
                   ],
-                ),
-              ),
+                );
+              },
             ),
           ),
         ),
