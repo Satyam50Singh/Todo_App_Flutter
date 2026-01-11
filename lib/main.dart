@@ -1,3 +1,4 @@
+import 'package:auth_app/core/bloc/app_bloc_observer.dart';
 import 'package:auth_app/features/auth/login/presentation/bloc/auth_bloc.dart';
 import 'package:auth_app/features/home/presentation/bloc/counter_bloc.dart';
 import 'package:auth_app/features/home/presentation/cubit/counter_cubit.dart';
@@ -11,6 +12,7 @@ import 'features/todo/presentation/pages/add_todo_page.dart';
 import 'features/todo/presentation/pages/todo_list.dart';
 
 void main() {
+  Bloc.observer = AppBlocObserver();
   runApp(const MyApp());
 }
 

@@ -1,0 +1,37 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+class AppBlocObserver extends BlocObserver {
+  @override
+  void onCreate(BlocBase<dynamic> bloc) {
+    super.onCreate(bloc);
+    debugPrint('onCreate: $bloc');
+  }
+
+  @override
+  void onTransition(
+    Bloc<dynamic, dynamic> bloc,
+    Transition<dynamic, dynamic> transition,
+  ) {
+    super.onTransition(bloc, transition);
+    debugPrint('onTransition: $transition');
+  }
+
+  @override
+  void onChange(BlocBase<dynamic> bloc, Change<dynamic> change) {
+    super.onChange(bloc, change);
+    debugPrint('onChange: $change');
+  }
+
+  @override
+  void onError(BlocBase<dynamic> bloc, Object error, StackTrace stackTrace) {
+    super.onError(bloc, error, stackTrace);
+    debugPrint('onError: $error');
+  }
+
+  @override
+  void onClose(BlocBase<dynamic> bloc) {
+    super.onClose(bloc);
+    debugPrint('onClose: $bloc');
+  }
+}
