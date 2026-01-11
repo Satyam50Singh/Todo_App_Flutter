@@ -2,6 +2,7 @@ import 'package:auth_app/features/auth/login/presentation/bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/theme/pallete.dart';
 import '../../data/models/todo_model.dart';
 import '../cubit/todo_cubit.dart';
 
@@ -23,7 +24,7 @@ class TodoList extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text("Todo List"),
-          backgroundColor: Colors.purple,
+          backgroundColor: Pallete.gradient1,
           foregroundColor: Colors.white,
           elevation: 4,
           actions: [
@@ -36,7 +37,7 @@ class TodoList extends StatelessWidget {
           ],
         ),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.purple,
+          backgroundColor: Pallete.gradient1,
           onPressed: () {
             Navigator.of(context).pushNamed('/add-todo-page');
           },

@@ -85,11 +85,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             LoginField(
                               hintText: 'Email',
                               controller: emailController,
+                              isPassword: false,
                             ),
                             const SizedBox(height: 15),
                             LoginField(
                               hintText: 'Password',
                               controller: passwordController,
+                              isPassword: true,
                             ),
                             const SizedBox(height: 30),
                             GradientButton(
