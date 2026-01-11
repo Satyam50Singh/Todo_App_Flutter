@@ -6,43 +6,62 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial()) {
-    on<AuthLoginRequested>((event, emit) async {
-      try {
-        emit(AuthLoading());
+    on<AuthLoginRequested>(_onAuthLoginRequested);
+    on<AuthLogoutRequested>(_onAuthLogoutRequested);
+  }
 
-        final email = event.email;
-        final password = event.password;
+  @override
+  void onChange(Change<AuthState> change) {
+    super.onChange(change);
+    debugPrint('AuthBloc: $change');
+  }
 
-        if (email.isEmpty) {
-          return emit(AuthFailure(errorMessage: 'Email cannot be empty.'));
-        } else if (password.length < 6) {
-          return emit(
-            AuthFailure(
-              errorMessage: 'Password cannot be less than 6 characters.',
-            ),
-          );
-        }
-        await Future.delayed(const Duration(seconds: 2), () {
-          return emit(
-            AuthSuccess(
-              message: 'Welcome ${email.toUpperCase().split('@')[0]}',
-            ),
-          );
-        });
-      } catch (e) {
-        emit(AuthFailure(errorMessage: 'Login failed. ${e.toString()}'));
-      }
-    });
+  @override
+  void onTransition(Transition<AuthEvent, AuthState> transition) {
+    super.onTransition(transition);
+    debugPrint('AuthBloc: $transition');
+  }
 
-    on<AuthLogoutRequested>((event, emit) async {
+  void _onAuthLoginRequested(
+    AuthLoginRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    try {
       emit(AuthLoading());
-      try {
-        await Future.delayed(const Duration(seconds: 2), () {
-          return emit(AuthInitial());
-        });
-      } catch (e) {
-        emit(AuthFailure(errorMessage: 'Logout failed. ${e.toString()}'));
+
+      final email = event.email;
+      final password = event.password;
+
+      if (email.isEmpty) {
+        return emit(AuthFailure(errorMessage: 'Email cannot be empty.'));
+      } else if (password.length < 6) {
+        return emit(
+          AuthFailure(
+            errorMessage: 'Password cannot be less than 6 characters.',
+          ),
+        );
       }
-    });
+      await Future.delayed(const Duration(seconds: 2), () {
+        return emit(
+          AuthSuccess(message: 'Welcome ${email.toUpperCase().split('@')[0]}'),
+        );
+      });
+    } catch (e) {
+      emit(AuthFailure(errorMessage: 'Login failed. ${e.toString()}'));
+    }
+  }
+
+  void _onAuthLogoutRequested(
+    AuthLogoutRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    try {
+      await Future.delayed(const Duration(seconds: 2), () {
+        return emit(AuthInitial());
+      });
+    } catch (e) {
+      emit(AuthFailure(errorMessage: 'Logout failed. ${e.toString()}'));
+    }
   }
 }

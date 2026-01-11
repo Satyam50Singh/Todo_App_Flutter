@@ -70,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             const SizedBox(height: 50),
                             const SocialButton(
-                              iconPath: 'assets/svgs/f_logo.s vg',
+                              iconPath: 'assets/svgs/f_logo.svg',
                               labelText: 'Continue with Facebook',
                               horizontalPadding: 80,
                             ),

@@ -15,4 +15,10 @@ class TodoCubit extends Cubit<List<TodoModel>> {
     }
     emit([...state]);
   }
+
+  @override
+  void onChange(Change<List<TodoModel>> change) {
+    super.onChange(change);
+    print('TodoCubit: $change');
+  }
 }
