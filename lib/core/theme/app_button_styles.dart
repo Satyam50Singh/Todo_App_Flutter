@@ -13,4 +13,17 @@ class AppButtonStyles {
       RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     ),
   );
+
+  static ButtonStyle customButtonStyle({Color backgroundColor = Colors.blue}) {
+    return ButtonStyle(
+      backgroundColor: WidgetStateProperty.all(backgroundColor),
+      foregroundColor: WidgetStateProperty.all(Colors.white),
+      padding: WidgetStateProperty.all(
+        const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      ),
+      shape: WidgetStateProperty.all(
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+  }
 }

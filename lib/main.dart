@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'features/auth/login/presentation/pages/login_screen.dart';
-import 'features/home/presentation/pages/home_page.dart';
 import 'features/todo/presentation/pages/add_todo_page.dart';
 import 'features/todo/presentation/pages/todo_list.dart';
 
@@ -30,6 +29,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => AuthBloc()),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
         home: const LoginScreen(),

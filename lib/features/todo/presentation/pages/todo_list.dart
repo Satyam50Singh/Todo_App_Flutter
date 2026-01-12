@@ -100,7 +100,7 @@ class TodoList extends StatelessWidget {
                               ),
                             ),
                             trailing: IconButton(
-                              icon: const Icon(Icons.delete_outline),
+                              icon: const Icon(Icons.delete_forever),
                               onPressed: () {
                                 BlocProvider.of<TodoCubit>(
                                   context,
