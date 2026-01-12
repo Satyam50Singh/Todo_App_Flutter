@@ -1,3 +1,4 @@
+import 'package:auth_app/core/routes/app_routes.dart';
 import 'package:auth_app/core/theme/app_button_styles.dart';
 import 'package:auth_app/features/home/presentation/bloc/counter_bloc.dart';
 import 'package:auth_app/features/home/presentation/pages/inc_dec_page.dart';
@@ -34,14 +35,14 @@ class MyHomePage extends StatelessWidget {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pushNamed('/todo-list');
+                Navigator.pushNamed(context, RouteName.todoListScreen);
               },
               style: AppButtonStyles.buttonStyle,
               child: const Text('Go to Todo List'),
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pushNamed('/login');
+                Navigator.pushNamed(context, RouteName.loginScreen);
               },
               style: AppButtonStyles.buttonStyle,
               child: const Text('Login'),

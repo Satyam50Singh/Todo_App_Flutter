@@ -1,3 +1,4 @@
+import 'package:auth_app/core/routes/app_routes.dart';
 import 'package:auth_app/features/auth/login/presentation/bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,9 +17,11 @@ class TodoList extends StatelessWidget {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthInitial) {
-          Navigator.of(
+          Navigator.pushNamedAndRemoveUntil(
             context,
-          ).pushNamedAndRemoveUntil('/login', (route) => false);
+            RouteName.loginScreen,
+            (route) => false,
+          );
         }
       },
       child: Scaffold(
@@ -39,7 +42,7 @@ class TodoList extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Pallete.gradient1,
           onPressed: () {
-            Navigator.of(context).pushNamed('/add-todo-page');
+            Navigator.pushNamed(context, RouteName.addTodoScreen);
           },
           tooltip: "Add Todo",
           child: Icon(Icons.add, color: Colors.white),

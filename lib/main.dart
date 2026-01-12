@@ -1,4 +1,6 @@
 import 'package:auth_app/core/bloc/app_bloc_observer.dart';
+import 'package:auth_app/core/routes/app_navigator.dart';
+import 'package:auth_app/core/routes/app_routes.dart';
 import 'package:auth_app/features/auth/login/presentation/bloc/auth_bloc.dart';
 import 'package:auth_app/features/home/presentation/bloc/counter_bloc.dart';
 import 'package:auth_app/features/home/presentation/cubit/counter_cubit.dart';
@@ -32,12 +34,8 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-        home: const LoginScreen(),
-        routes: {
-          '/login': (_) => const LoginScreen(),
-          '/todo-list': (_) => const TodoList(),
-          '/add-todo-page': (_) => const AddTodoPage(),
-        },
+        initialRoute: RouteName.loginScreen,
+        onGenerateRoute: AppNavigator.onGenerateRoute,
       ),
     );
   }

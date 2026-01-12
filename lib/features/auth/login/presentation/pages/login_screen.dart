@@ -1,5 +1,5 @@
+import 'package:auth_app/core/routes/app_routes.dart';
 import 'package:auth_app/core/theme/pallete.dart';
-import 'package:auth_app/features/todo/presentation/pages/todo_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,9 +46,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
 
                 if (state is AuthSuccess) {
-                  Navigator.pushAndRemoveUntil(
+                  Navigator.pushNamedAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => const TodoList()),
+                    RouteName.todoListScreen,
                     (route) => false,
                   );
                 }
