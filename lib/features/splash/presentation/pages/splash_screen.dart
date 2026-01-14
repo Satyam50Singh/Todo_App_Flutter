@@ -24,11 +24,12 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _start() async {
     final isAuth = await _appStartup.isAuthenticated();
 
-    if (!mounted) return;
+    if (!mounted) return; // Check if the widget is still mounted
 
-    Navigator.pushNamed(
+    Navigator.pushNamedAndRemoveUntil(
       context,
       isAuth ? RouteName.todoListScreen : RouteName.loginScreen,
+      (route) => false,
     );
   }
 
