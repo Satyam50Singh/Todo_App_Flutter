@@ -8,12 +8,11 @@ import 'package:auth_app/features/todo/presentation/cubit/todo_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'features/auth/login/presentation/pages/login_screen.dart';
-import 'features/todo/presentation/pages/add_todo_page.dart';
-import 'features/todo/presentation/pages/todo_list.dart';
+import 'core/di/injection_container.dart';
 
-void main() {
+void main() async {
   Bloc.observer = AppBlocObserver();
+  await init();
   runApp(const MyApp());
 }
 
@@ -28,7 +27,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => CounterCubit()),
         BlocProvider(create: (_) => CounterBloc()),
         BlocProvider(create: (_) => TodoCubit()),
-        BlocProvider(create: (_) => AuthBloc()),
+        BlocProvider(create: (_) => sl<AuthBloc>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

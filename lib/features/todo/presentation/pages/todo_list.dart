@@ -57,12 +57,23 @@ class TodoList extends StatelessWidget {
                       authState.message != null &&
                       todos.isEmpty) {
                     return Center(
-                      child: Text(
-                        authState.message!,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            authState.message!,
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(height: 25),
+                          Text(
+                            'Access Token: ${authState.accessToken!}',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
                       ),
                     );
                   }

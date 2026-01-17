@@ -1,4 +1,5 @@
 import 'package:auth_app/core/utils/Validations.dart';
+import 'package:auth_app/features/auth/login/domain/usecases/login_usecase.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -6,7 +7,9 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc() : super(AuthInitial()) {
+  final LoginUseCase _loginUseCase;
+
+  AuthBloc(this._loginUseCase) : super(AuthInitial()) {
     on<AuthLoginRequested>(_onAuthLoginRequested);
     on<AuthLogoutRequested>(_onAuthLogoutRequested);
   }
@@ -22,10 +25,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       return emit(AuthFailure(errorMessage: 'Email cannot be empty.'));
     }
 
-    if (!Validations.isValidEmail(email)) {
-      return emit(AuthFailure(errorMessage: 'Please enter a Valid Email.'));
-    }
-
     if (Validations.isPasswordEmpty(password)) {
       return emit(AuthFailure(errorMessage: 'Password cannot be empty.'));
     }
@@ -39,12 +38,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
 
     try {
-      await Future.delayed(const Duration(seconds: 2));
+      final result = await _loginUseCase.call(email: email, password: password);
+
+      if (kDebugMode) {
+        print(result);
+      }
+
       emit(
-        AuthSuccess(message: 'Welcome ${email.toUpperCase().split('@')[0]}'),
+        AuthSuccess(
+          message: 'Welcome ${result.username.toUpperCase()}',
+          accessToken: result.accessToken,
+        ),
       );
-      } catch (e) {
-      emit(AuthFailure(errorMessage: 'Login failed. ${e.toString()}'));
+    } catch (e) {
+      emit(AuthFailure(errorMessage: e.toString()));
     }
   }
 

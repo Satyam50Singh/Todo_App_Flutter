@@ -42,40 +42,61 @@ class NetworkServicesApi implements BaseApiServices {
     dynamic jsonResponse;
     try {
       final response = await http
-          .post(Uri.parse(url), body: payload)
-          .timeout(const Duration(seconds: 50));
+          .post(
+            Uri.parse(url),
+            body: payload,
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+          )
+          .timeout(const Duration(seconds: 30));
 
+      debugPrint("API URL: $url && $payload");
+      debugPrint(
+        "Response StatusCode: ${response.statusCode} && ${response.body}",
+      );
       jsonResponse = await handleResponse(response);
+      debugPrint("Response Body: ${jsonResponse.toString()}");
     } on SocketException {
       throw NoInternetException();
     } on TimeoutException {
       throw RequestTimeout();
+    } on Failure {
+      rethrow;
     } catch (e) {
-      throw ServerException();
+      throw ServerException('Unexpected server error');
     }
 
     return jsonResponse;
   }
 
   dynamic handleResponse(http.Response response) {
+    final decodedBody = response.body.isNotEmpty
+        ? jsonDecode(response.body)
+        : null;
+
+    final message = decodedBody is Map && decodedBody['message'] != null
+        ? decodedBody['message']
+        : 'Something went wrong';
+
     switch (response.statusCode) {
       case 200:
-        dynamic jsonResponse = jsonDecode(response.body);
-        return jsonResponse;
+        return decodedBody;
       case 400:
-        throw BadRequestException();
+        throw BadRequestException(message);
       case 401:
-        throw UnauthorizedException();
+        throw UnauthorizedException(message);
       case 403:
-        throw ForbiddenException();
+        throw ForbiddenException(message);
       case 404:
-        throw NotFoundException();
+        throw NotFoundException(message);
       case 408:
-        throw RequestTimeout();
+        throw RequestTimeout(message);
       case 409:
-        throw ConflictException();
+        throw ConflictException(message);
       default:
-        throw ServerException();
+        throw ServerException(message);
     }
   }
 }
