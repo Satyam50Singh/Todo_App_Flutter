@@ -1,3 +1,4 @@
+import 'package:auth_app/core/utils/Validations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,27 +15,35 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthLoginRequested event,
     Emitter<AuthState> emit,
   ) async {
+    final email = event.email.trim();
+    final password = event.password.trim();
+
+    if (Validations.isEmailEmpty(email)) {
+      return emit(AuthFailure(errorMessage: 'Email cannot be empty.'));
+    }
+
+    if (!Validations.isValidEmail(email)) {
+      return emit(AuthFailure(errorMessage: 'Please enter a Valid Email.'));
+    }
+
+    if (Validations.isPasswordEmpty(password)) {
+      return emit(AuthFailure(errorMessage: 'Password cannot be empty.'));
+    }
+
+    if (!Validations.isValidPassword(password)) {
+      return emit(
+        AuthFailure(errorMessage: 'Password cannot be less than 6 characters.'),
+      );
+    }
+
+    emit(AuthLoading());
+
     try {
-      emit(AuthLoading());
-
-      final email = event.email;
-      final password = event.password;
-
-      if (email.isEmpty) {
-        return emit(AuthFailure(errorMessage: 'Email cannot be empty.'));
-      } else if (password.length < 6) {
-        return emit(
-          AuthFailure(
-            errorMessage: 'Password cannot be less than 6 characters.',
-          ),
-        );
-      }
-      await Future.delayed(const Duration(seconds: 2), () {
-        return emit(
-          AuthSuccess(message: 'Welcome ${email.toUpperCase().split('@')[0]}'),
-        );
-      });
-    } catch (e) {
+      await Future.delayed(const Duration(seconds: 2));
+      emit(
+        AuthSuccess(message: 'Welcome ${email.toUpperCase().split('@')[0]}'),
+      );
+      } catch (e) {
       emit(AuthFailure(errorMessage: 'Login failed. ${e.toString()}'));
     }
   }
