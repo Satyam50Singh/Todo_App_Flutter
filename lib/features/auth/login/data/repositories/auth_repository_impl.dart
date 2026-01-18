@@ -1,3 +1,4 @@
+import 'package:auth_app/core/error/failure_mapper.dart';
 import 'package:auth_app/features/auth/login/data/datasources/auth_remote_data_source.dart';
 import 'package:auth_app/features/auth/login/domain/entities/login_entity.dart';
 import 'package:auth_app/features/auth/login/domain/repositories/auth_repository.dart';
@@ -34,22 +35,8 @@ class AuthRepositoryImpl implements AuthRepository {
           refreshToken: loginResponseModel.refreshToken,
         ),
       );
-    } on NoInternetException catch (e) {
-      return Left(e);
-    } on BadRequestException catch (e) {
-      return Left(e);
-    } on UnauthorizedException catch (e) {
-      return Left(e);
-    } on ForbiddenException catch (e) {
-      return Left(e);
-    } on NotFoundException catch (e) {
-      return Left(e);
-    } on ServerException catch (e) {
-      return Left(e);
-    } on Failure catch (e) {
-      return Left(e);
-    } catch (_) {
-      return Left(ServerException('Unknown error'));
+    } catch (e) {
+      return Left(FailureMapper.map(e));
     }
   }
 
