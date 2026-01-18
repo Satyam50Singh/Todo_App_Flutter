@@ -30,8 +30,10 @@ class NetworkServicesApi implements BaseApiServices {
       throw NoInternetException();
     } on TimeoutException {
       throw RequestTimeout();
+    } on Failure {
+      rethrow;
     } catch (e) {
-      throw ServerException();
+      throw ServerException('Unexpected server error');
     }
 
     return jsonResponse;

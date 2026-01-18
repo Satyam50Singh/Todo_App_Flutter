@@ -37,22 +37,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     emit(AuthLoading());
 
-    try {
-      final result = await _loginUseCase.call(email: email, password: password);
+    final result = await _loginUseCase.call(email: email, password: password);
 
-      if (kDebugMode) {
-        print(result);
-      }
-
-      emit(
-        AuthSuccess(
-          message: 'Welcome ${result.username.toUpperCase()}',
-          accessToken: result.accessToken,
-        ),
-      );
-    } catch (e) {
-      emit(AuthFailure(errorMessage: e.toString()));
+    if (kDebugMode) {
+      print(result);
     }
+
+    result.fold(
+      (failure) => emit(AuthFailure(errorMessage: failure.toString())),
+      (user) => emit(
+        AuthSuccess(
+          message: 'Welcome ${user.username.toUpperCase()}',
+          accessToken: user.accessToken,
+        ),
+      ),
+    );
   }
 
   void _onAuthLogoutRequested(
