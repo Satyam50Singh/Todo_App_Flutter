@@ -1,4 +1,5 @@
 import 'package:auth_app/core/utils/Validations.dart';
+import 'package:auth_app/features/auth/login/domain/usecases/login_params.dart';
 import 'package:auth_app/features/auth/login/domain/usecases/login_usecase.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,7 +38,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     emit(AuthLoading());
 
-    final result = await _loginUseCase.call(email: email, password: password);
+    final result = await _loginUseCase.call(LoginParams(username: email, password: password));
 
     if (kDebugMode) {
       print(result);
