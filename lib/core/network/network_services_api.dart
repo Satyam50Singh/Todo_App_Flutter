@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:auth_app/core/network/base_api_services.dart';
+import 'package:auth_app/core/network/network_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -40,19 +41,22 @@ class NetworkServicesApi implements BaseApiServices {
   }
 
   @override
-  Future<dynamic> postApi(String url, var payload) async {
+  Future<dynamic> postApi(String path, var payload) async {
     dynamic jsonResponse;
+
+    final url = Uri.parse('${NetworkConstants.baseUrl}$path');
+
     try {
       final response = await http
           .post(
-            Uri.parse(url),
+            url,
             body: payload,
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
             },
           )
-          .timeout(const Duration(seconds: 30));
+          .timeout(const Duration(seconds: NetworkConstants.timeout));
 
       debugPrint("API URL: $url && $payload");
       debugPrint(
