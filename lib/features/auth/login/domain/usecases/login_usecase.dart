@@ -1,5 +1,5 @@
 import 'package:auth_app/core/error/exceptions.dart';
-import 'package:auth_app/core/usecase/bae_use_case.dart';
+import 'package:auth_app/core/usecase/base_usecase.dart';
 import 'package:auth_app/features/auth/login/domain/entities/login_entity.dart';
 import 'package:auth_app/features/auth/login/domain/repositories/auth_repository.dart';
 import 'package:dartz/dartz.dart';
