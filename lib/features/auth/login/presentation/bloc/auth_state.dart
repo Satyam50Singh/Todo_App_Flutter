@@ -13,8 +13,9 @@ final class AuthLoading extends AuthState {
 
 final class AuthSuccess extends AuthState {
   final String? message;
+  final String? accessToken;
 
-  AuthSuccess({this.message});
+  AuthSuccess({this.message, this.accessToken});
 }
 
 final class AuthFailure extends AuthState {

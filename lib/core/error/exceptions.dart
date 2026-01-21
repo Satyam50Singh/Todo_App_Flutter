@@ -41,3 +41,7 @@ class ServerException extends Failure {
 class RequestTimeout extends Failure {
   RequestTimeout([String errorMessage = 'Request timeout']) : super(errorMessage);
 }
+
+class ForbiddenException extends Failure {
+  ForbiddenException([String errorMessage = 'Forbidden Exception']) : super(errorMessage);
+}

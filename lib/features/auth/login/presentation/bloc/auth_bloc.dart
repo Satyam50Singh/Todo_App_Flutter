@@ -1,3 +1,6 @@
+import 'package:auth_app/core/utils/Validations.dart';
+import 'package:auth_app/features/auth/login/domain/usecases/login_params.dart';
+import 'package:auth_app/features/auth/login/domain/usecases/login_usecase.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -5,7 +8,9 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc() : super(AuthInitial()) {
+  final LoginUseCase _loginUseCase;
+
+  AuthBloc(this._loginUseCase) : super(AuthInitial()) {
     on<AuthLoginRequested>(_onAuthLoginRequested);
     on<AuthLogoutRequested>(_onAuthLogoutRequested);
   }
@@ -14,29 +19,40 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthLoginRequested event,
     Emitter<AuthState> emit,
   ) async {
-    try {
-      emit(AuthLoading());
+    final email = event.email.trim();
+    final password = event.password.trim();
 
-      final email = event.email;
-      final password = event.password;
-
-      if (email.isEmpty) {
-        return emit(AuthFailure(errorMessage: 'Email cannot be empty.'));
-      } else if (password.length < 6) {
-        return emit(
-          AuthFailure(
-            errorMessage: 'Password cannot be less than 6 characters.',
-          ),
-        );
-      }
-      await Future.delayed(const Duration(seconds: 2), () {
-        return emit(
-          AuthSuccess(message: 'Welcome ${email.toUpperCase().split('@')[0]}'),
-        );
-      });
-    } catch (e) {
-      emit(AuthFailure(errorMessage: 'Login failed. ${e.toString()}'));
+    if (Validations.isEmailEmpty(email)) {
+      return emit(AuthFailure(errorMessage: 'Email cannot be empty.'));
     }
+
+    if (Validations.isPasswordEmpty(password)) {
+      return emit(AuthFailure(errorMessage: 'Password cannot be empty.'));
+    }
+
+    if (!Validations.isValidPassword(password)) {
+      return emit(
+        AuthFailure(errorMessage: 'Password cannot be less than 6 characters.'),
+      );
+    }
+
+    emit(AuthLoading());
+
+    final result = await _loginUseCase.call(LoginParams(username: email, password: password));
+
+    if (kDebugMode) {
+      print(result);
+    }
+
+    result.fold(
+      (failure) => emit(AuthFailure(errorMessage: failure.toString())),
+      (user) => emit(
+        AuthSuccess(
+          message: 'Welcome ${user.username.toUpperCase()}',
+          accessToken: user.accessToken,
+        ),
+      ),
+    );
   }
 
   void _onAuthLogoutRequested(
