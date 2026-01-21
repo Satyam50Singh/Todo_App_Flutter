@@ -4,12 +4,17 @@ import 'dart:io';
 
 import 'package:auth_app/core/network/base_api_services.dart';
 import 'package:auth_app/core/network/network_constants.dart';
+import 'package:auth_app/core/network/token_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../error/exceptions.dart';
 
 class NetworkServicesApi implements BaseApiServices {
+  final TokenStorage tokenStorage;
+
+  NetworkServicesApi(this.tokenStorage);
+
   @override
   Future<dynamic> getApi(String url) async {
     dynamic jsonResponse;

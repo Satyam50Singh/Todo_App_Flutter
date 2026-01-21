@@ -3,6 +3,8 @@ import 'package:auth_app/core/startup/app_startup.dart';
 import 'package:auth_app/core/theme/pallete.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/di/injection_container.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -16,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _appStartup = AppStartup();
+    _appStartup = sl<AppStartup>();
 
     _start();
   }

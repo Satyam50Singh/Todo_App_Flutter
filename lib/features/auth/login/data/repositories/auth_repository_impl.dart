@@ -1,4 +1,5 @@
 import 'package:auth_app/core/base/base_repository.dart';
+import 'package:auth_app/core/network/token_storage.dart';
 import 'package:auth_app/features/auth/login/data/datasources/auth_remote_data_source.dart';
 import 'package:auth_app/features/auth/login/domain/entities/login_entity.dart';
 import 'package:auth_app/features/auth/login/domain/repositories/auth_repository.dart';
@@ -8,8 +9,9 @@ import '../../../../../core/error/exceptions.dart';
 
 class AuthRepositoryImpl extends BaseRepository implements AuthRepository {
   final AuthRemoteDataSource _authRemoteDataSource;
+  final TokenStorage _storage;
 
-  AuthRepositoryImpl(this._authRemoteDataSource);
+  AuthRepositoryImpl(this._authRemoteDataSource, this._storage);
 
   @override
   Future<Either<Failure, LoginEntity>> login({
@@ -21,6 +23,12 @@ class AuthRepositoryImpl extends BaseRepository implements AuthRepository {
         email,
         password,
       );
+
+      await _storage.saveTokens(
+        accessToken: loginResponseModel.accessToken,
+        refreshToken: loginResponseModel.refreshToken,
+      );
+
       return LoginEntity(
         id: loginResponseModel.id,
         email: loginResponseModel.email,
@@ -36,8 +44,8 @@ class AuthRepositoryImpl extends BaseRepository implements AuthRepository {
   }
 
   @override
-  Future<void> logout() {
-    // TODO: implement logout
-    throw UnimplementedError();
+  Future<Either<Failure, void>> logout() async {
+    await _storage.clearTokens();
+    return const Right(null);
   }
 }
