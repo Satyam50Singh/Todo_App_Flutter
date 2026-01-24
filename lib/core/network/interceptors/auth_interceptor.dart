@@ -23,8 +23,16 @@ class AuthInterceptor implements Interceptor {
       request.headers['Authorization'] = 'Bearer $token';
     }
     if (kDebugMode) {
-      debugPrint('REQUEST: ${request.method} ${request.url}');
+      debugPrint('METHOD: ${request.method} ${request.url}');
       debugPrint('Headers: ${request.headers}');
+      if (request is http.Request) {
+        debugPrint('Body: ${request.body}');
+      } else if (request is http.MultipartRequest) {
+        debugPrint('Fields: ${request.fields}');
+        debugPrint('Files: ${request.files.map((f) => f.filename)}');
+      } else {
+        debugPrint('Body: <not available for ${request.runtimeType}>');
+      }
     }
     return request;
   }
