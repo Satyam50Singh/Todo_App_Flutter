@@ -1,7 +1,10 @@
 import 'package:auth_app/core/routes/app_routes.dart';
 import 'package:auth_app/features/auth/login/presentation/bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../../core/theme/pallete.dart';
 import '../../data/models/todo_model.dart';
@@ -79,52 +82,121 @@ class TodoList extends StatelessWidget {
                   }
                   // If there are todos, show them
                   if (todos.isNotEmpty) {
-                    return ListView.builder(
-                      itemCount: todos.length,
-                      itemBuilder: (context, index) {
-                        final todo = todos[index];
+                    return Builder(
+                      builder: (BuildContext parentContext) {
+                        return ListView.builder(
+                          itemCount: todos.length,
+                          itemBuilder: (context, index) {
+                            final todo = todos[index];
 
-                        return Card(
-                          margin: const EdgeInsets.symmetric(vertical: 6),
-                          elevation: 2,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
-                            ),
-                            leading: const Icon(
-                              Icons.check_circle_outline,
-                              color: Colors.purple,
-                            ),
-                            title: Text(
-                              todo.name,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
+                            return ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Slidable(
+                                key: ValueKey(0),
+                                endActionPane: ActionPane(
+                                  motion: const DrawerMotion(),
+                                  children: [
+                                    SlidableAction(
+                                      onPressed: (context) {
+                                        Clipboard.setData(
+                                          ClipboardData(text: todo.name),
+                                        ).then(
+                                          (_) => {
+                                            ScaffoldMessenger.of(
+                                              parentContext,
+                                            ).showSnackBar(
+                                              const SnackBar(
+                                                content: Text("Todo copied"),
+                                              ),
+                                            ),
+                                          },
+                                        );
+                                      },
+                                      backgroundColor: Colors.grey,
+                                      foregroundColor: Colors.white,
+                                      icon: Icons.copy,
+                                      label: 'Copy',
+                                    ),
+                                    SlidableAction(
+                                      onPressed: (context) {
+                                        BlocProvider.of<TodoCubit>(
+                                          context,
+                                        ).removeTodo(index);
+                                        ScaffoldMessenger.of(
+                                          parentContext,
+                                        ).showSnackBar(
+                                          const SnackBar(
+                                            content: Text("Todo deleted"),
+                                          ),
+                                        );
+                                      },
+                                      backgroundColor: Colors.red,
+                                      foregroundColor: Colors.white,
+                                      icon: Icons.delete,
+                                      label: 'Delete',
+                                    ),
+                                    SlidableAction(
+                                      onPressed: (context) async {
+                                        try {
+                                          final result = await SharePlus
+                                              .instance
+                                              .share(
+                                                ShareParams(text: todo.name),
+                                              );
+                                          if (ShareResultStatus.success ==
+                                              result.status) {
+                                            debugPrint("Todo shared");
+                                          } else {
+                                            debugPrint("Todo not shared");
+                                          }
+                                        } on Exception catch (e) {
+                                          debugPrint(e.toString());
+                                        }
+                                      },
+                                      backgroundColor: Colors.blue,
+                                      foregroundColor: Colors.white,
+                                      icon: Icons.share,
+                                      label: 'Share',
+                                    ),
+                                  ],
+                                ),
+                                child: Card(
+                                  margin: const EdgeInsets.symmetric(
+                                    vertical: 8,
+                                    horizontal: 4
+                                  ),
+                                  elevation: 2,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: ListTile(
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 8,
+                                    ),
+                                    leading: const Icon(
+                                      Icons.check_circle_outline,
+                                      color: Colors.purple,
+                                    ),
+                                    title: Text(
+                                      todo.name,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    subtitle: Text(
+                                      todo.createdAt,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey.shade600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                            subtitle: Text(
-                              todo.createdAt,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey.shade600,
-                              ),
-                            ),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.delete_forever),
-                              onPressed: () {
-                                BlocProvider.of<TodoCubit>(
-                                  context,
-                                ).removeTodo(index);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text("Todo deleted")),
-                                );
-                              },
-                            ),
-                          ),
+                            );
+                          },
                         );
                       },
                     );
