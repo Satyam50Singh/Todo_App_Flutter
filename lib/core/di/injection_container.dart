@@ -1,4 +1,5 @@
-import 'package:auth_app/core/network/base_api_services.dart';
+import 'package:auth_app/core/network/intercepted_http_client.dart';
+import 'package:auth_app/core/network/interceptors/auth_interceptor.dart';
 import 'package:auth_app/core/network/network_services_api.dart';
 import 'package:auth_app/core/network/secure_token_storage.dart';
 import 'package:auth_app/core/network/token_storage.dart';
@@ -9,6 +10,7 @@ import 'package:auth_app/features/auth/login/domain/repositories/auth_repository
 import 'package:auth_app/features/auth/login/domain/usecases/login_usecase.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:http/http.dart' as http;
 
 import '../../features/auth/login/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/login/presentation/bloc/auth_bloc.dart';
@@ -28,7 +30,7 @@ Future<void> init() async {
 
   // Register Network Layer
   sl.registerLazySingleton<NetworkServicesApi>(
-    () => NetworkServicesApi(sl<TokenStorage>()),
+    () => NetworkServicesApi(sl<TokenStorage>(), sl<InterceptedHttpClient>()),
   );
 
   // Register Auth Feature
@@ -48,4 +50,12 @@ Future<void> init() async {
 
   // App Startup
   sl.registerLazySingleton<AppStartup>(() => AppStartup(sl()));
+
+  sl.registerLazySingleton<AuthInterceptor>(
+    () => AuthInterceptor(sl<TokenStorage>()),
+  );
+
+  sl.registerLazySingleton<InterceptedHttpClient>(
+    () => InterceptedHttpClient(http.Client(), [sl<AuthInterceptor>()]),
+  );
 }

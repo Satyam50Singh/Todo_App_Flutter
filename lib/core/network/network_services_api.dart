@@ -1,19 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:auth_app/core/network/base_api_services.dart';
 import 'package:auth_app/core/network/network_constants.dart';
 import 'package:auth_app/core/network/token_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../error/exceptions.dart';
+import 'intercepted_http_client.dart';
 
 class NetworkServicesApi implements BaseApiServices {
   final TokenStorage tokenStorage;
+  final InterceptedHttpClient _client;
 
-  NetworkServicesApi(this.tokenStorage);
+  NetworkServicesApi(this.tokenStorage, this._client);
 
   @override
   Future<dynamic> getApi(String url) async {
@@ -28,14 +28,7 @@ class NetworkServicesApi implements BaseApiServices {
             },
           )
           .timeout(const Duration(seconds: 50));
-      debugPrint("API URL: $url");
-      debugPrint("Response StatusCode: ${response.statusCode}");
       jsonResponse = await handleResponse(response);
-      debugPrint("Response Body: ${jsonResponse.toString()}");
-    } on SocketException {
-      throw NoInternetException();
-    } on TimeoutException {
-      throw RequestTimeout();
     } on Failure {
       rethrow;
     } catch (e) {
@@ -52,27 +45,20 @@ class NetworkServicesApi implements BaseApiServices {
     final url = Uri.parse('${NetworkConstants.baseUrl}$path');
 
     try {
-      final response = await http
-          .post(
-            url,
-            body: payload,
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-            },
-          )
+      final request = http.Request('POST', url);
+
+      request.headers.addAll({
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      });
+
+      request.body = payload;
+
+      final response = await _client
+          .send(request)
           .timeout(const Duration(seconds: NetworkConstants.timeout));
 
-      debugPrint("API URL: $url && $payload");
-      debugPrint(
-        "Response StatusCode: ${response.statusCode} && ${response.body}",
-      );
       jsonResponse = await handleResponse(response);
-      debugPrint("Response Body: ${jsonResponse.toString()}");
-    } on SocketException {
-      throw NoInternetException();
-    } on TimeoutException {
-      throw RequestTimeout();
     } on Failure {
       rethrow;
     } catch (e) {
