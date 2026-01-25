@@ -177,6 +177,8 @@ class TodoList extends StatelessWidget {
                                     ),
                                     title: Text(
                                       todo.name,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
