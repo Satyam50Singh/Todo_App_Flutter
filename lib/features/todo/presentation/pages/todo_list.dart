@@ -97,9 +97,10 @@ class TodoList extends StatelessWidget {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
                                 child: Slidable(
-                                  key: ValueKey(0),
+                                  key: ValueKey(todo.name),
                                   endActionPane: ActionPane(
-                                    motion: const DrawerMotion(),
+                                    motion: const StretchMotion(),
+                                    extentRatio: 0.40,
                                     children: [
                                       SlidableAction(
                                         onPressed: (context) {
@@ -163,14 +164,17 @@ class TodoList extends StatelessWidget {
                                   ),
                                   child: Card(
                                     margin: EdgeInsetsGeometry.only(
-                                      left: 2,
-                                      top: 2,
-                                      bottom: 2,
-                                      right: 0,
+                                      left: 1,
+                                      top: 1,
+                                      bottom: 1,
+                                      right: 1,
                                     ),
-                                    elevation: 2,
+                                    elevation: 1,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(12),
+                                        bottomLeft: Radius.circular(12),
+                                      ),
                                     ),
                                     child: ListTile(
                                       contentPadding:
