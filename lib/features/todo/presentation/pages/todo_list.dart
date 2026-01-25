@@ -90,105 +90,113 @@ class TodoList extends StatelessWidget {
                           itemBuilder: (context, index) {
                             final todo = todos[index];
 
-                            return ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: Slidable(
-                                key: ValueKey(0),
-                                endActionPane: ActionPane(
-                                  motion: const DrawerMotion(),
-                                  children: [
-                                    SlidableAction(
-                                      onPressed: (context) {
-                                        Clipboard.setData(
-                                          ClipboardData(text: todo.name),
-                                        ).then(
-                                          (_) => {
-                                            CustomSnackBar.showCustomSnackBar(
-                                              parentContext,
-                                              true,
-                                              'Todo copied',
-                                            ),
-                                          },
-                                        );
-                                      },
-                                      backgroundColor: Colors.grey,
-                                      foregroundColor: Colors.white,
-                                      icon: Icons.copy,
-                                      label: 'Copy',
-                                    ),
-                                    SlidableAction(
-                                      onPressed: (context) {
-                                        BlocProvider.of<TodoCubit>(
-                                          context,
-                                        ).removeTodo(index);
-                                        CustomSnackBar.showCustomSnackBar(
-                                          parentContext,
-                                          true,
-                                          'Todo deleted',
-                                        );
-                                      },
-                                      backgroundColor: Colors.red,
-                                      foregroundColor: Colors.white,
-                                      icon: Icons.delete,
-                                      label: 'Delete',
-                                    ),
-                                    SlidableAction(
-                                      onPressed: (context) async {
-                                        try {
-                                          final result = await SharePlus
-                                              .instance
-                                              .share(
-                                                ShareParams(text: todo.name),
-                                              );
-                                          if (ShareResultStatus.success ==
-                                              result.status) {
-                                            debugPrint("Todo shared");
-                                          } else {
-                                            debugPrint("Todo not shared");
-                                          }
-                                        } on Exception catch (e) {
-                                          debugPrint(e.toString());
-                                        }
-                                      },
-                                      backgroundColor: Colors.blue,
-                                      foregroundColor: Colors.white,
-                                      icon: Icons.share,
-                                      label: 'Share',
-                                    ),
-                                  ],
-                                ),
-                                child: Card(
-                                  margin: const EdgeInsets.symmetric(
-                                    vertical: 8,
-                                    horizontal: 4,
-                                  ),
-                                  elevation: 2,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: ListTile(
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 8,
-                                    ),
-                                    leading: const Icon(
-                                      Icons.check_circle_outline,
-                                      color: Colors.purple,
-                                    ),
-                                    title: Text(
-                                      todo.name,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 4.0,
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Slidable(
+                                  key: ValueKey(0),
+                                  endActionPane: ActionPane(
+                                    motion: const DrawerMotion(),
+                                    children: [
+                                      SlidableAction(
+                                        onPressed: (context) {
+                                          Clipboard.setData(
+                                            ClipboardData(text: todo.name),
+                                          ).then(
+                                            (_) => {
+                                              CustomSnackBar.showCustomSnackBar(
+                                                parentContext,
+                                                true,
+                                                'Todo copied',
+                                              ),
+                                            },
+                                          );
+                                        },
+                                        backgroundColor: Colors.grey,
+                                        foregroundColor: Colors.white,
+                                        icon: Icons.copy,
+                                        label: 'Copy',
                                       ),
+                                      SlidableAction(
+                                        onPressed: (context) {
+                                          BlocProvider.of<TodoCubit>(
+                                            context,
+                                          ).removeTodo(index);
+                                          CustomSnackBar.showCustomSnackBar(
+                                            parentContext,
+                                            true,
+                                            'Todo deleted',
+                                          );
+                                        },
+                                        backgroundColor: Colors.red,
+                                        foregroundColor: Colors.white,
+                                        icon: Icons.delete,
+                                        label: 'Delete',
+                                      ),
+                                      SlidableAction(
+                                        onPressed: (context) async {
+                                          try {
+                                            final result = await SharePlus
+                                                .instance
+                                                .share(
+                                                  ShareParams(text: todo.name),
+                                                );
+                                            if (ShareResultStatus.success ==
+                                                result.status) {
+                                              debugPrint("Todo shared");
+                                            } else {
+                                              debugPrint("Todo not shared");
+                                            }
+                                          } on Exception catch (e) {
+                                            debugPrint(e.toString());
+                                          }
+                                        },
+                                        backgroundColor: Colors.blue,
+                                        foregroundColor: Colors.white,
+                                        icon: Icons.share,
+                                        label: 'Share',
+                                      ),
+                                    ],
+                                  ),
+                                  child: Card(
+                                    margin: EdgeInsetsGeometry.only(
+                                      left: 2,
+                                      top: 2,
+                                      bottom: 2,
+                                      right: 0,
                                     ),
-                                    subtitle: Text(
-                                      todo.createdAt,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey.shade600,
+                                    elevation: 2,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: ListTile(
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 16,
+                                            vertical: 8,
+                                          ),
+                                      leading: const Icon(
+                                        Icons.check_circle_outline,
+                                        color: Colors.purple,
+                                      ),
+                                      title: Text(
+                                        todo.name,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        todo.createdAt,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey.shade600,
+                                        ),
                                       ),
                                     ),
                                   ),
