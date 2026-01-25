@@ -3,6 +3,7 @@ import 'package:auth_app/core/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/utils/snackbar_utils.dart';
 import '../cubit/todo_cubit.dart';
 
 class AddTodoPage extends StatefulWidget {
@@ -72,13 +73,17 @@ class _AddTodoPageState extends State<AddTodoPage> {
                 onPressed: () {
                   if (_todoController.text.trim().isNotEmpty) {
                     todoCubit.addTodo(_todoController.text.trim());
-                    ScaffoldMessenger.of(
+                    CustomSnackBar.showCustomSnackBar(
                       context,
-                    ).showSnackBar(const SnackBar(content: Text("Todo added")));
+                      true,
+                      "Todo added Successfully",
+                    );
                     _todoController.clear();
                   } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Please write something!")),
+                    CustomSnackBar.showCustomSnackBar(
+                      context,
+                      false,
+                      "Please write something!",
                     );
                   }
                 },

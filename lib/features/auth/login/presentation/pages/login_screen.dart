@@ -1,5 +1,6 @@
 import 'package:auth_app/core/routes/app_routes.dart';
 import 'package:auth_app/core/theme/pallete.dart';
+import 'package:auth_app/core/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,14 +39,19 @@ class _LoginScreenState extends State<LoginScreen> {
             child: BlocConsumer<AuthBloc, AuthState>(
               listener: (context, state) {
                 if (state is AuthFailure) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(state.errorMessage ?? 'Login failed.'),
-                    ),
+                  CustomSnackBar.showCustomSnackBar(
+                    context,
+                    false,
+                    state.errorMessage ?? 'Login Failed!',
                   );
                 }
 
                 if (state is AuthSuccess) {
+                  CustomSnackBar.showCustomSnackBar(
+                    context,
+                    true,
+                    state.message ?? 'Login Successfully!',
+                  );
                   Navigator.pushNamedAndRemoveUntil(
                     context,
                     RouteName.todoListScreen,

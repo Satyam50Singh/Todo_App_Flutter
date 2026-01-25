@@ -1,4 +1,5 @@
 import 'package:auth_app/core/routes/app_routes.dart';
+import 'package:auth_app/core/utils/snackbar_utils.dart';
 import 'package:auth_app/features/auth/login/presentation/bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -59,26 +60,26 @@ class TodoList extends StatelessWidget {
                   if (authState is AuthSuccess &&
                       authState.message != null &&
                       todos.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            authState.message!,
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          SizedBox(height: 25),
-                          Text(
-                            'Access Token: ${authState.accessToken!}',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ],
-                      ),
-                    );
+                    // return Center(
+                    //   child: Column(
+                    //     mainAxisAlignment: MainAxisAlignment.center,
+                    //     crossAxisAlignment: CrossAxisAlignment.center,
+                    //     children: [
+                    //       Text(
+                    //         authState.message!,
+                    //         style: TextStyle(
+                    //           fontSize: 24,
+                    //           fontWeight: FontWeight.w600,
+                    //         ),
+                    //       ),
+                    //       SizedBox(height: 25),
+                    //       Text(
+                    //         'Access Token: ${authState.accessToken!}',
+                    //         style: TextStyle(fontSize: 16),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // );
                   }
                   // If there are todos, show them
                   if (todos.isNotEmpty) {
@@ -102,12 +103,10 @@ class TodoList extends StatelessWidget {
                                           ClipboardData(text: todo.name),
                                         ).then(
                                           (_) => {
-                                            ScaffoldMessenger.of(
+                                            CustomSnackBar.showCustomSnackBar(
                                               parentContext,
-                                            ).showSnackBar(
-                                              const SnackBar(
-                                                content: Text("Todo copied"),
-                                              ),
+                                              true,
+                                              'Todo copied',
                                             ),
                                           },
                                         );
@@ -122,12 +121,10 @@ class TodoList extends StatelessWidget {
                                         BlocProvider.of<TodoCubit>(
                                           context,
                                         ).removeTodo(index);
-                                        ScaffoldMessenger.of(
+                                        CustomSnackBar.showCustomSnackBar(
                                           parentContext,
-                                        ).showSnackBar(
-                                          const SnackBar(
-                                            content: Text("Todo deleted"),
-                                          ),
+                                          true,
+                                          'Todo deleted',
                                         );
                                       },
                                       backgroundColor: Colors.red,
@@ -163,7 +160,7 @@ class TodoList extends StatelessWidget {
                                 child: Card(
                                   margin: const EdgeInsets.symmetric(
                                     vertical: 8,
-                                    horizontal: 4
+                                    horizontal: 4,
                                   ),
                                   elevation: 2,
                                   shape: RoundedRectangleBorder(
@@ -203,12 +200,24 @@ class TodoList extends StatelessWidget {
                   }
 
                   return const Center(
-                    child: Text(
-                      "Add todos..",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.edit_note_outlined,
+                          size: 48,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(height: 12),
+                        Text(
+                          "Start writing your todos",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 },
