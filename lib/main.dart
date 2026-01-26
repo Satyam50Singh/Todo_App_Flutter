@@ -7,6 +7,7 @@ import 'package:auth_app/features/home/presentation/cubit/counter_cubit.dart';
 import 'package:auth_app/features/todo/presentation/cubit/todo_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 
 import 'core/di/injection_container.dart';
 
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => sl<AuthBloc>()),
       ],
       child: MaterialApp(
+        localizationsDelegates: [FlutterQuillLocalizations.delegate],
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),

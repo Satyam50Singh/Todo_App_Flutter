@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:auth_app/core/routes/app_routes.dart';
 import 'package:auth_app/core/utils/snackbar_utils.dart';
 import 'package:auth_app/features/auth/login/presentation/bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill/quill_delta.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -57,30 +61,6 @@ class TodoList extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
               child: BlocBuilder<TodoCubit, List<TodoModel>>(
                 builder: (context, todos) {
-                  if (authState is AuthSuccess &&
-                      authState.message != null &&
-                      todos.isEmpty) {
-                    // return Center(
-                    //   child: Column(
-                    //     mainAxisAlignment: MainAxisAlignment.center,
-                    //     crossAxisAlignment: CrossAxisAlignment.center,
-                    //     children: [
-                    //       Text(
-                    //         authState.message!,
-                    //         style: TextStyle(
-                    //           fontSize: 24,
-                    //           fontWeight: FontWeight.w600,
-                    //         ),
-                    //       ),
-                    //       SizedBox(height: 25),
-                    //       Text(
-                    //         'Access Token: ${authState.accessToken!}',
-                    //         style: TextStyle(fontSize: 16),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // );
-                  }
                   // If there are todos, show them
                   if (todos.isNotEmpty) {
                     return Builder(
@@ -89,6 +69,7 @@ class TodoList extends StatelessWidget {
                           itemCount: todos.length,
                           itemBuilder: (context, index) {
                             final todo = todos[index];
+                            debugPrint(todo.description);
 
                             return Padding(
                               padding: const EdgeInsets.symmetric(
@@ -105,7 +86,16 @@ class TodoList extends StatelessWidget {
                                       SlidableAction(
                                         onPressed: (context) {
                                           Clipboard.setData(
-                                            ClipboardData(text: todo.name),
+                                            ClipboardData(
+                                              text:
+                                                  '''
+                                                  📝 ${todo.name}
+                                                  \n📄 Description:
+                                                  \n${quillJsonToPlainText(todo.description)}
+                                                  \n📅 Due Date: ${todo.dueDate}
+                                                  '''
+                                                      .trim(),
+                                            ),
                                           ).then(
                                             (_) => {
                                               CustomSnackBar.showCustomSnackBar(
@@ -143,7 +133,16 @@ class TodoList extends StatelessWidget {
                                             final result = await SharePlus
                                                 .instance
                                                 .share(
-                                                  ShareParams(text: todo.name),
+                                                  ShareParams(
+                                                    text:
+                                                        '''
+                                                  📝 ${todo.name}
+                                                  \n📄 Description:
+                                                  \n${quillJsonToPlainText(todo.description)}
+                                                  \n📅 Due Date: ${todo.dueDate}
+                                                  '''
+                                                            .trim(),
+                                                  ),
                                                 );
                                             if (ShareResultStatus.success ==
                                                 result.status) {
@@ -163,12 +162,7 @@ class TodoList extends StatelessWidget {
                                     ],
                                   ),
                                   child: Card(
-                                    margin: EdgeInsetsGeometry.only(
-                                      left: 1,
-                                      top: 1,
-                                      bottom: 1,
-                                      right: 1,
-                                    ),
+                                    margin: EdgeInsetsGeometry.all(1),
                                     elevation: 1,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.only(
@@ -190,17 +184,52 @@ class TodoList extends StatelessWidget {
                                         todo.name,
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                       ),
-                                      subtitle: Text(
-                                        todo.createdAt,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey.shade600,
-                                        ),
+                                      subtitle: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(height: 4),
+                                          QuillEditor.basic(
+                                            controller: QuillController(
+                                              readOnly: true,
+                                              document: Document.fromDelta(
+                                                Delta.fromJson(
+                                                  jsonDecode(todo.description),
+                                                ),
+                                              ),
+                                              selection:
+                                                  const TextSelection.collapsed(
+                                                    offset: 0,
+                                                  ),
+                                            ),
+                                            // read: true,
+                                          ),
+                                          const SizedBox(height: 12),
+                                          Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.calendar_month,
+                                                size: 18,
+                                                color: Colors.red,
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                                "Due Date: ${todo.dueDate}",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.grey.shade600,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
@@ -252,5 +281,15 @@ class TodoList extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String quillJsonToPlainText(String json) {
+    try {
+      final delta = Delta.fromJson(jsonDecode(json));
+      final document = Document.fromDelta(delta);
+      return document.toPlainText().trim();
+    } catch (_) {
+      return "";
+    }
   }
 }

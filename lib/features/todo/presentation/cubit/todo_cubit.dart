@@ -4,8 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class TodoCubit extends Cubit<List<TodoModel>> {
   TodoCubit() : super([]);
 
-  void addTodo(String title) {
-    final todo = TodoModel(name: title, createdAt: DateTime.now().toString());
+  void addTodo(String title, String description, String dueDate) {
+    final todo = TodoModel(
+      name: title,
+      description: description,
+      dueDate: dueDate,
+      createdAt: DateTime.now().toString(),
+    );
     emit([...state, todo]);
   }
 
