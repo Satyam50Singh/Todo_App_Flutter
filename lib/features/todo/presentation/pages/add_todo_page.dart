@@ -93,7 +93,8 @@ class _AddTodoPageState extends State<AddTodoPage> {
                     child: QuillSimpleToolbar(
                       controller: _quillController,
                       config: const QuillSimpleToolbarConfig(
-                        sectionDividerSpace: 1,
+                        toolbarSectionSpacing: 1,
+                        sectionDividerSpace: 3,
                         showFontSize: false,
                         showFontFamily: false,
                         showRedo: false,
