@@ -212,23 +212,24 @@ class TodoList extends StatelessWidget {
                                             // read: true,
                                           ),
                                           const SizedBox(height: 12),
-                                          Row(
-                                            children: [
-                                              const Icon(
-                                                Icons.calendar_month,
-                                                size: 18,
-                                                color: Colors.red,
-                                              ),
-                                              const SizedBox(width: 4),
-                                              Text(
-                                                "Due Date: ${todo.dueDate}",
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.grey.shade600,
+                                          if (todo.dueDate.isNotEmpty)
+                                            Row(
+                                              children: [
+                                                const Icon(
+                                                  Icons.calendar_month,
+                                                  size: 18,
+                                                  color: Colors.red,
                                                 ),
-                                              ),
-                                            ],
-                                          ),
+                                                const SizedBox(width: 4),
+                                                Text(
+                                                  "Due Date: ${todo.dueDate}",
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.grey.shade600,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                         ],
                                       ),
                                     ),
