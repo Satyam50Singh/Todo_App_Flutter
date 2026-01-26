@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 
-class RegisterRedirectText extends StatelessWidget {
-  final VoidCallback onPressed;
+class LoginRedirectText extends StatelessWidget {
+  final VoidCallback onTap;
 
-  const RegisterRedirectText({super.key, required this.onPressed});
+  const LoginRedirectText({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text("Already have an account?"),
+        Text("Don't have an account?"),
         SizedBox(width: 5),
         InkWell(
           child: Text(
-            'Login now',
+            'Register now',
             style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
           ),
-          onTap: onPressed,
+          onTap: onTap,
         ),
       ],
     );

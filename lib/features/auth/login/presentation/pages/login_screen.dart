@@ -1,6 +1,8 @@
 import 'package:auth_app/core/routes/app_routes.dart';
 import 'package:auth_app/core/theme/pallete.dart';
 import 'package:auth_app/core/utils/snackbar_utils.dart';
+import 'package:auth_app/core/widgets/circular_loader.dart';
+import 'package:auth_app/features/auth/login/presentation/widgets/login_redirect_text.dart';
 import 'package:auth_app/features/auth/register/presentation/pages/register_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -67,92 +69,72 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     SingleChildScrollView(
                       child: Center(
-                        child: Column(
-                          children: [
-                            Image.asset('assets/images/sign_in_balls.png'),
-                            const Text(
-                              'Sign in',
-                              style: TextStyle(
-                                fontSize: 50,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 50),
-                            const SocialButton(
-                              iconPath: 'assets/svgs/f_logo.svg',
-                              labelText: 'Continue with Facebook',
-                              horizontalPadding: 80,
-                            ),
-                            const SizedBox(height: 15),
-                            const SocialButton(
-                              iconPath: "assets/svgs/g_logo.svg",
-                              labelText: 'Continue with Google',
-                            ),
-                            const SizedBox(height: 15),
-                            const Text("Or", style: TextStyle(fontSize: 17)),
-                            const SizedBox(height: 15),
-                            LoginField(
-                              hintText: 'Email',
-                              controller: _emailController,
-                              isPassword: false,
-                            ),
-                            const SizedBox(height: 15),
-                            LoginField(
-                              hintText: 'Password',
-                              controller: _passwordController,
-                              isPassword: true,
-                            ),
-                            const SizedBox(height: 30),
-                            GradientButton(
-                              onPressed: () {
-                                BlocProvider.of<AuthBloc>(context).add(
-                                  AuthLoginRequested(
-                                    email: _emailController.text.trim(),
-                                    password: _passwordController.text.trim(),
-                                  ),
-                                );
-                              },
-                            ),
-
-                            const SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text("Don't have an account?"),
-                                SizedBox(width: 5),
-                                InkWell(
-                                  child: Text(
-                                    'Register now',
-                                    style: TextStyle(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    Navigator.of(context).pushReplacement(
-                                      CupertinoPageRoute(
-                                        builder: (_) => const RegisterScreen(),
-                                      ),
-                                    );
-                                  },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Column(
+                            children: [
+                              Image.asset('assets/images/sign_in_balls.png'),
+                              const Text(
+                                'Sign in',
+                                style: TextStyle(
+                                  fontSize: 50,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                              ),
+                              const SizedBox(height: 50),
+                              const SocialButton(
+                                iconPath: 'assets/svgs/f_logo.svg',
+                                labelText: 'Continue with Facebook',
+                                horizontalPadding: 60,
+                              ),
+                              const SizedBox(height: 15),
+                              const SocialButton(
+                                iconPath: "assets/svgs/g_logo.svg",
+                                labelText: 'Continue with Google',
+                              ),
+                              const SizedBox(height: 15),
+                              const Text("Or", style: TextStyle(fontSize: 17)),
+                              const SizedBox(height: 15),
+                              LoginField(
+                                hintText: 'Email',
+                                controller: _emailController,
+                                isPassword: false,
+                              ),
+                              const SizedBox(height: 15),
+                              LoginField(
+                                hintText: 'Password',
+                                controller: _passwordController,
+                                isPassword: true,
+                              ),
+                              const SizedBox(height: 30),
+                              GradientButton(
+                                onPressed: () {
+                                  BlocProvider.of<AuthBloc>(context).add(
+                                    AuthLoginRequested(
+                                      email: _emailController.text.trim(),
+                                      password: _passwordController.text.trim(),
+                                    ),
+                                  );
+                                },
+                              ),
 
-                    if (state is AuthLoading)
-                      Positioned.fill(
-                        child: AbsorbPointer(
-                          absorbing: true,
-                          child: Container(
-                            color: Colors.black.withOpacity(0.5),
-                            child: Center(child: CircularProgressIndicator()),
+                              const SizedBox(height: 20),
+                              LoginRedirectText(
+                                onTap: () {
+                                  debugPrint('on tap called');
+                                  Navigator.of(context).pushReplacement(
+                                    CupertinoPageRoute(
+                                      builder: (_) => const RegisterScreen(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                         ),
                       ),
+                    ),
+                    if (state is AuthLoading) CircularLoader(),
                   ],
                 );
               },

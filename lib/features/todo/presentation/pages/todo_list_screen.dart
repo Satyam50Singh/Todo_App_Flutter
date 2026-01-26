@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:auth_app/core/routes/app_routes.dart';
 import 'package:auth_app/core/utils/snackbar_utils.dart';
+import 'package:auth_app/core/widgets/circular_loader.dart';
 import 'package:auth_app/features/auth/login/presentation/bloc/auth_bloc.dart';
+import 'package:auth_app/features/todo/presentation/widgets/todo_list_widgets/todo_list_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,8 +17,8 @@ import '../../../../core/theme/pallete.dart';
 import '../../data/models/todo_model.dart';
 import '../cubit/todo_cubit.dart';
 
-class TodoList extends StatelessWidget {
-  const TodoList({super.key});
+class TodoListScreen extends StatelessWidget {
+  const TodoListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,19 +35,10 @@ class TodoList extends StatelessWidget {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text("Todo List"),
-          backgroundColor: Pallete.gradient1,
-          foregroundColor: Colors.white,
-          elevation: 4,
-          actions: [
-            IconButton(
-              onPressed: () {
-                context.read<AuthBloc>().add(AuthLogoutRequested());
-              },
-              icon: Icon(Icons.logout),
-            ),
-          ],
+        appBar: TodoListAppBar(
+          onPressed: () {
+            context.read<AuthBloc>().add(AuthLogoutRequested());
+          },
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Pallete.gradient1,
@@ -268,16 +261,7 @@ class TodoList extends StatelessWidget {
               ),
             ),
 
-            if (authState is AuthLoading)
-              Positioned.fill(
-                child: AbsorbPointer(
-                  absorbing: true,
-                  child: Container(
-                    color: Colors.black.withOpacity(0.5),
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
-                ),
-              ),
+            if (authState is AuthLoading) CircularLoader(),
           ],
         ),
       ),
