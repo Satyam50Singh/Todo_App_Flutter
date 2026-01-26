@@ -1,6 +1,8 @@
 import 'package:auth_app/core/routes/app_routes.dart';
 import 'package:auth_app/core/theme/pallete.dart';
 import 'package:auth_app/core/utils/snackbar_utils.dart';
+import 'package:auth_app/features/auth/register/presentation/pages/register_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,6 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
           scaffoldBackgroundColor: Pallete.backgroundColor,
         ),
         child: Scaffold(
+          backgroundColor: Pallete.backgroundColor,
           body: SafeArea(
             child: BlocConsumer<AuthBloc, AuthState>(
               listener: (context, state) {
@@ -109,6 +112,31 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 );
                               },
+                            ),
+
+                            const SizedBox(height: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("Don't have an account?"),
+                                SizedBox(width: 5),
+                                InkWell(
+                                  child: Text(
+                                    'Register now',
+                                    style: TextStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    Navigator.of(context).pushReplacement(
+                                      CupertinoPageRoute(
+                                        builder: (_) => const RegisterScreen(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
                           ],
                         ),

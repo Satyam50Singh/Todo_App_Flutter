@@ -185,8 +185,8 @@ class _AddTodoPageState extends State<AddTodoPage> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
                   if (isDueDateRequired) ...[
+                    const SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12.0),
                       child: Column(
