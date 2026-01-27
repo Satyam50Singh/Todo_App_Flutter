@@ -1,4 +1,4 @@
-import 'package:auth_app/core/utils/Validations.dart';
+import 'package:auth_app/core/utils/validations.dart';
 import 'package:auth_app/features/auth/login/domain/usecases/login_params.dart';
 import 'package:auth_app/features/auth/login/domain/usecases/login_usecase.dart';
 import 'package:flutter/foundation.dart';
@@ -9,8 +9,9 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginUseCase _loginUseCase;
+  final IValidations _validations;
 
-  AuthBloc(this._loginUseCase) : super(AuthInitial()) {
+  AuthBloc(this._loginUseCase, this._validations) : super(AuthInitial()) {
     on<AuthLoginRequested>(_onAuthLoginRequested);
     on<AuthLogoutRequested>(_onAuthLogoutRequested);
   }
@@ -22,15 +23,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final email = event.email.trim();
     final password = event.password.trim();
 
-    if (Validations.isEmailEmpty(email)) {
+    if (_validations.isEmailEmpty(email)) {
       return emit(AuthFailure(errorMessage: 'Email cannot be empty.'));
     }
 
-    if (Validations.isPasswordEmpty(password)) {
+    if (_validations.isPasswordEmpty(password)) {
       return emit(AuthFailure(errorMessage: 'Password cannot be empty.'));
     }
 
-    if (!Validations.isValidPassword(password)) {
+    if (!_validations.isValidPassword(password)) {
       return emit(
         AuthFailure(errorMessage: 'Password cannot be less than 6 characters.'),
       );

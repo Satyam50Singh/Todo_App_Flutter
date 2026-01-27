@@ -4,6 +4,7 @@ import 'package:auth_app/core/network/network_services_api.dart';
 import 'package:auth_app/core/network/secure_token_storage.dart';
 import 'package:auth_app/core/network/token_storage.dart';
 import 'package:auth_app/core/storage/secure_storage.dart';
+import 'package:auth_app/core/utils/validations.dart';
 import 'package:auth_app/features/auth/login/data/datasources/auth_remote_data_source.dart';
 import 'package:auth_app/features/auth/login/data/datasources/auth_remote_data_source_impl.dart';
 import 'package:auth_app/features/auth/login/domain/repositories/auth_repository.dart';
@@ -46,7 +47,7 @@ Future<void> init() async {
   sl.registerLazySingleton<LoginUseCase>(() => LoginUseCase(sl()));
 
   // Bloc must be factory, not singleton
-  sl.registerFactory(() => AuthBloc(sl()));
+  sl.registerFactory(() => AuthBloc(sl(), sl()));
 
   // App Startup
   sl.registerLazySingleton<AppStartup>(() => AppStartup(sl()));
@@ -58,4 +59,7 @@ Future<void> init() async {
   sl.registerLazySingleton<InterceptedHttpClient>(
     () => InterceptedHttpClient(http.Client(), [sl<AuthInterceptor>()]),
   );
+
+  // Validations
+  sl.registerLazySingleton<IValidations>(() => Validations());
 }

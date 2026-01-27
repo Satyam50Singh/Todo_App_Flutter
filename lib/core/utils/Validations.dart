@@ -1,20 +1,22 @@
-class Validations {
-  static bool isEmailEmpty(String email) {
-    return email.trim().isEmpty;
+abstract class IValidations {
+  bool isEmailEmpty(String email);
+  bool isPasswordEmpty(String password);
+  bool isValidPassword(String password);
+}
+
+class Validations implements IValidations {
+  @override
+  bool isEmailEmpty(String email) {
+    return email.isEmpty;
   }
 
-  static bool isValidEmail(String email) {
-    final emailRegex = RegExp(
-      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-    );
-    return emailRegex.hasMatch(email);
+  @override
+  bool isPasswordEmpty(String password) {
+    return password.isEmpty;
   }
 
-  static bool isPasswordEmpty(String password) {
-    return password.trim().isEmpty;
-  }
-
-  static bool isValidPassword(String password) {
-   return password.length >=6;
+  @override
+  bool isValidPassword(String password) {
+    return password.length >= 6;
   }
 }
