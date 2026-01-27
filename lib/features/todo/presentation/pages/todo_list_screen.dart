@@ -1,15 +1,16 @@
-import 'dart:convert';
-
+import 'package:auth_app/core/enums/todo_action_type.dart';
 import 'package:auth_app/core/routes/app_routes.dart';
 import 'package:auth_app/core/utils/snackbar_utils.dart';
+import 'package:auth_app/core/utils/utils.dart';
 import 'package:auth_app/core/widgets/circular_loader.dart';
 import 'package:auth_app/features/auth/login/presentation/bloc/auth_bloc.dart';
+import 'package:auth_app/features/todo/presentation/widgets/todo_list_widgets/empty_todo_state.dart';
 import 'package:auth_app/features/todo/presentation/widgets/todo_list_widgets/todo_list_app_bar.dart';
+import 'package:auth_app/features/todo/presentation/widgets/todo_list_widgets/todo_list_tile.dart';
+import 'package:auth_app/features/todo/presentation/widgets/todo_list_widgets/todo_slidable_action.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_quill/flutter_quill.dart';
-import 'package:flutter_quill/quill_delta.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -73,84 +74,35 @@ class TodoListScreen extends StatelessWidget {
                                 child: Slidable(
                                   key: ValueKey(todo.name),
                                   endActionPane: ActionPane(
+                                    motion: const DrawerMotion(),
+                                    extentRatio: 0.20,
+                                    children: [
+                                      TodoSlidableAction(
+                                        todoActionType: TodoActionType.delete,
+                                        onPressed: (_) => deleteTodo(
+                                          context,
+                                          parentContext,
+                                          index,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  startActionPane: ActionPane(
                                     motion: const StretchMotion(),
                                     extentRatio: 0.40,
                                     children: [
-                                      SlidableAction(
-                                        onPressed: (context) {
-                                          Clipboard.setData(
-                                            ClipboardData(
-                                              text:
-                                                  '''
-                                                  📝 ${todo.name}
-                                                  \n📄 Description:
-                                                  \n${quillJsonToPlainText(todo.description)}
-                                                  \n📅 Due Date: ${todo.dueDate}
-                                                  '''
-                                                      .trim(),
-                                            ),
-                                          ).then(
-                                            (_) => {
-                                              CustomSnackBar.showCustomSnackBar(
-                                                parentContext,
-                                                true,
-                                                'Todo copied',
-                                              ),
-                                            },
-                                          );
-                                        },
-                                        backgroundColor: Colors.grey,
-                                        foregroundColor: Colors.white,
-                                        icon: Icons.copy,
-                                        label: 'Copy',
+                                      TodoSlidableAction(
+                                        todoActionType: TodoActionType.copy,
+                                        onPressed: (_) => copyTodoContent(
+                                          todo,
+                                          parentContext,
+                                        ),
                                       ),
-                                      SlidableAction(
-                                        onPressed: (context) {
-                                          BlocProvider.of<TodoCubit>(
-                                            context,
-                                          ).removeTodo(index);
-                                          CustomSnackBar.showCustomSnackBar(
-                                            parentContext,
-                                            true,
-                                            'Todo deleted',
-                                          );
+                                      TodoSlidableAction(
+                                        todoActionType: TodoActionType.share,
+                                        onPressed: (_) async {
+                                          await shareTodoContent(todo);
                                         },
-                                        backgroundColor: Colors.red,
-                                        foregroundColor: Colors.white,
-                                        icon: Icons.delete,
-                                        label: 'Delete',
-                                      ),
-                                      SlidableAction(
-                                        onPressed: (context) async {
-                                          try {
-                                            final result = await SharePlus
-                                                .instance
-                                                .share(
-                                                  ShareParams(
-                                                    text:
-                                                        '''
-                                                  📝 ${todo.name}
-                                                  \n📄 Description:
-                                                  \n${quillJsonToPlainText(todo.description)}
-                                                  \n📅 Due Date: ${todo.dueDate}
-                                                  '''
-                                                            .trim(),
-                                                  ),
-                                                );
-                                            if (ShareResultStatus.success ==
-                                                result.status) {
-                                              debugPrint("Todo shared");
-                                            } else {
-                                              debugPrint("Todo not shared");
-                                            }
-                                          } on Exception catch (e) {
-                                            debugPrint(e.toString());
-                                          }
-                                        },
-                                        backgroundColor: Colors.blue,
-                                        foregroundColor: Colors.white,
-                                        icon: Icons.share,
-                                        label: 'Share',
                                       ),
                                     ],
                                   ),
@@ -163,69 +115,7 @@ class TodoListScreen extends StatelessWidget {
                                         bottomLeft: Radius.circular(12),
                                       ),
                                     ),
-                                    child: ListTile(
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                            horizontal: 16,
-                                            vertical: 8,
-                                          ),
-                                      leading: const Icon(
-                                        Icons.check_circle_outline,
-                                        color: Colors.purple,
-                                      ),
-                                      title: Text(
-                                        todo.name,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleLarge
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                      ),
-                                      subtitle: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const SizedBox(height: 4),
-                                          QuillEditor.basic(
-                                            controller: QuillController(
-                                              readOnly: true,
-                                              document: Document.fromDelta(
-                                                Delta.fromJson(
-                                                  jsonDecode(todo.description),
-                                                ),
-                                              ),
-                                              selection:
-                                                  const TextSelection.collapsed(
-                                                    offset: 0,
-                                                  ),
-                                            ),
-                                            // read: true,
-                                          ),
-                                          const SizedBox(height: 12),
-                                          if (todo.dueDate.isNotEmpty)
-                                            Row(
-                                              children: [
-                                                const Icon(
-                                                  Icons.calendar_month,
-                                                  size: 18,
-                                                  color: Colors.red,
-                                                ),
-                                                const SizedBox(width: 4),
-                                                Text(
-                                                  "Due Date: ${todo.dueDate}",
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: Colors.grey.shade600,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                        ],
-                                      ),
-                                    ),
+                                    child: TodoListTile(todoModel: todo),
                                   ),
                                 ),
                               ),
@@ -236,27 +126,7 @@ class TodoListScreen extends StatelessWidget {
                     );
                   }
 
-                  return const Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.edit_note_outlined,
-                          size: 48,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(height: 12),
-                        Text(
-                          "Start writing your todos",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
+                  return const EmptyTodoState();
                 },
               ),
             ),
@@ -268,13 +138,51 @@ class TodoListScreen extends StatelessWidget {
     );
   }
 
-  String quillJsonToPlainText(String json) {
+  void copyTodoContent(TodoModel todo, BuildContext parentContext) {
+    Clipboard.setData(
+      ClipboardData(
+        text:
+            '''
+        📝 ${todo.name}
+        \n📄 Description:
+        \n${Utils.quillJsonToPlainText(todo.description)}
+        \n📅 Due Date: ${todo.dueDate}
+        '''
+                .trim(),
+      ),
+    ).then(
+      (_) => {
+        CustomSnackBar.showCustomSnackBar(parentContext, true, 'Todo copied'),
+      },
+    );
+  }
+
+  Future shareTodoContent(TodoModel todo) async {
     try {
-      final delta = Delta.fromJson(jsonDecode(json));
-      final document = Document.fromDelta(delta);
-      return document.toPlainText().trim();
-    } catch (_) {
-      return "";
+      final result = await SharePlus.instance.share(
+        ShareParams(
+          text:
+              '''
+            📝 ${todo.name}
+            \n📄 Description:
+            \n${Utils.quillJsonToPlainText(todo.description)}
+            \n📅 Due Date: ${todo.dueDate}
+            '''
+                  .trim(),
+        ),
+      );
+      if (ShareResultStatus.success == result.status) {
+        debugPrint("Todo shared");
+      } else {
+        debugPrint("Todo not shared");
+      }
+    } on Exception catch (e) {
+      debugPrint(e.toString());
     }
+  }
+
+  void deleteTodo(BuildContext context, BuildContext parentContext, int index) {
+    BlocProvider.of<TodoCubit>(context).removeTodo(index);
+    CustomSnackBar.showCustomSnackBar(parentContext, true, 'Todo deleted');
   }
 }
