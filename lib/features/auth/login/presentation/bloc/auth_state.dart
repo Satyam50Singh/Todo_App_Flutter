@@ -11,11 +11,17 @@ final class AuthLoading extends AuthState {
   AuthLoading({this.message});
 }
 
-final class AuthSuccess extends AuthState {
+final class AuthLoginSuccess extends AuthState {
   final String? message;
   final String? accessToken;
 
-  AuthSuccess({this.message, this.accessToken});
+  AuthLoginSuccess({this.message, this.accessToken});
+}
+
+final class AuthRegisterSuccess extends AuthState {
+  final String? message;
+
+  AuthRegisterSuccess({this.message});
 }
 
 final class AuthFailure extends AuthState {

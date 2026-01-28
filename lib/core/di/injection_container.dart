@@ -9,6 +9,7 @@ import 'package:auth_app/features/auth/login/data/datasources/auth_remote_data_s
 import 'package:auth_app/features/auth/login/data/datasources/auth_remote_data_source_impl.dart';
 import 'package:auth_app/features/auth/login/domain/repositories/auth_repository.dart';
 import 'package:auth_app/features/auth/login/domain/usecases/login_usecase.dart';
+import 'package:auth_app/features/auth/login/domain/usecases/register_usecase.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -45,9 +46,13 @@ Future<void> init() async {
 
   // Use Cases
   sl.registerLazySingleton<LoginUseCase>(() => LoginUseCase(sl()));
+  sl.registerLazySingleton<RegisterUseCase>(() => RegisterUseCase(sl()));
 
   // Bloc must be factory, not singleton
-  sl.registerFactory(() => AuthBloc(sl(), sl()));
+  sl.registerFactory(
+    () =>
+        AuthBloc(sl<LoginUseCase>(), sl<RegisterUseCase>(), sl<IValidations>()),
+  );
 
   // App Startup
   sl.registerLazySingleton<AppStartup>(() => AppStartup(sl()));

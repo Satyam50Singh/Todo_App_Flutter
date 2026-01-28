@@ -51,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   );
                 }
 
-                if (state is AuthSuccess) {
+                if (state is AuthLoginSuccess) {
                   CustomSnackBar.showCustomSnackBar(
                     context,
                     true,
@@ -108,6 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               const SizedBox(height: 30),
                               GradientButton(
+                                buttonText: 'Sign in',
                                 onPressed: () {
                                   BlocProvider.of<AuthBloc>(context).add(
                                     AuthLoginRequested(
@@ -121,7 +122,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               const SizedBox(height: 20),
                               LoginRedirectText(
                                 onTap: () {
-                                  debugPrint('on tap called');
                                   Navigator.of(context).pushReplacement(
                                     CupertinoPageRoute(
                                       builder: (_) => const RegisterScreen(),

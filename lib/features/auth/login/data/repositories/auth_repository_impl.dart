@@ -1,7 +1,9 @@
 import 'package:auth_app/core/base/base_repository.dart';
 import 'package:auth_app/core/network/token_storage.dart';
 import 'package:auth_app/features/auth/login/data/datasources/auth_remote_data_source.dart';
+import 'package:auth_app/features/auth/login/data/models/register/register_response_model.dart';
 import 'package:auth_app/features/auth/login/domain/entities/login_entity.dart';
+import 'package:auth_app/features/auth/login/domain/entities/register_entity.dart';
 import 'package:auth_app/features/auth/login/domain/repositories/auth_repository.dart';
 import 'package:dartz/dartz.dart';
 
@@ -47,5 +49,32 @@ class AuthRepositoryImpl extends BaseRepository implements AuthRepository {
   Future<Either<Failure, void>> logout() async {
     await _storage.clearTokens();
     return const Right(null);
+  }
+
+  @override
+  Future<Either<Failure, RegisterEntity>> register({
+    required String username,
+    required String email,
+    required String password,
+    required String fullName,
+    required String mobileNumber,
+  }) {
+    return execute(() async {
+      final RegisterResponseModel registerResponseModel =
+          await _authRemoteDataSource.register(
+            username,
+            email,
+            password,
+            fullName,
+            mobileNumber,
+          );
+
+      return RegisterEntity(
+        status: registerResponseModel.status ?? 0,
+        message: registerResponseModel.message ?? '',
+        errorMsg: registerResponseModel.errorMsg ?? '',
+        loginMessage: registerResponseModel.loginMessage ?? '',
+      );
+    });
   }
 }

@@ -141,6 +141,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
       lastDate: DateTime.now().add(const Duration(days: 365)),
       builder: (context, child) {
         return Theme(

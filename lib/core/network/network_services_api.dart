@@ -39,10 +39,11 @@ class NetworkServicesApi implements BaseApiServices {
   }
 
   @override
-  Future<dynamic> postApi(String path, var payload) async {
+  Future<dynamic> postApi(String path, var payload, String baseUrl) async {
     dynamic jsonResponse;
 
-    final url = Uri.parse('${NetworkConstants.baseUrl}$path');
+    String finalUrl = '$baseUrl$path';
+    final url= Uri.parse(finalUrl);
 
     try {
       final request = http.Request('POST', url);

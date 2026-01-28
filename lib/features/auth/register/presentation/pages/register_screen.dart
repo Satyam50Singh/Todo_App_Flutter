@@ -1,3 +1,4 @@
+import 'package:auth_app/core/routes/app_routes.dart';
 import 'package:auth_app/core/utils/snackbar_utils.dart';
 import 'package:auth_app/features/auth/register/presentation/widgets/register_field.dart';
 import 'package:auth_app/features/auth/register/presentation/widgets/register_redirect_text.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/theme/pallete.dart';
+import '../../../../../core/widgets/circular_loader.dart';
 import '../../../login/presentation/bloc/auth_bloc.dart';
 import '../../../login/presentation/pages/login_screen.dart';
 import '../../../login/presentation/widgets/gradient_button.dart';
@@ -41,7 +43,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
           backgroundColor: Pallete.backgroundColor,
           body: SafeArea(
             child: BlocConsumer<AuthBloc, AuthState>(
-              listener: (BuildContext context, AuthState state) {},
+              listener: (BuildContext context, AuthState state) {
+                if (state is AuthFailure) {
+                  CustomSnackBar.showCustomSnackBar(
+                    context,
+                    false,
+                    state.errorMessage ?? 'User Registration Failed!',
+                  );
+                }
+
+                if (state is AuthRegisterSuccess) {
+                  CustomSnackBar.showCustomSnackBar(
+                    context,
+                    true,
+                    state.message ?? 'Registration Successful!',
+                  );
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    RouteName.loginScreen,
+                    (route) => false,
+                  );
+                }
+              },
               builder: (BuildContext context, AuthState state) {
                 return Stack(
                   children: [
@@ -89,7 +112,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
 
                               const SizedBox(height: 30),
-                              GradientButton(onPressed: () => _doRegister()),
+                              GradientButton(
+                                buttonText: 'Register',
+                                onPressed: () => _doRegister(),
+                              ),
 
                               const SizedBox(height: 20),
                               RegisterRedirectText(
@@ -106,6 +132,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                     ),
+                    if (state is AuthLoading) CircularLoader(),
                   ],
                 );
               },
@@ -152,6 +179,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
         'Passwords do not match',
       );
     }
+
+    BlocProvider.of<AuthBloc>(context).add(
+      AuthRegisterRequested(
+        username: _usernameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+        fullName: '',
+        mobileNumber: '',
+      ),
+    );
   }
 
   @override
