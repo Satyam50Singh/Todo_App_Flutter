@@ -1,8 +1,8 @@
 import 'package:auth_app/core/utils/validations.dart';
 import 'package:auth_app/features/auth/login/domain/usecases/login_params.dart';
 import 'package:auth_app/features/auth/login/domain/usecases/login_usecase.dart';
-import 'package:auth_app/features/auth/login/domain/usecases/register_params.dart';
-import 'package:auth_app/features/auth/login/domain/usecases/register_usecase.dart';
+import 'package:auth_app/features/auth/register/domain/usecases/register_params.dart';
+import 'package:auth_app/features/auth/register/domain/usecases/register_usecase.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

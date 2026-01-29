@@ -5,16 +5,20 @@ import 'package:auth_app/core/network/secure_token_storage.dart';
 import 'package:auth_app/core/network/token_storage.dart';
 import 'package:auth_app/core/storage/secure_storage.dart';
 import 'package:auth_app/core/utils/validations.dart';
-import 'package:auth_app/features/auth/login/data/datasources/auth_remote_data_source.dart';
-import 'package:auth_app/features/auth/login/data/datasources/auth_remote_data_source_impl.dart';
-import 'package:auth_app/features/auth/login/domain/repositories/auth_repository.dart';
+import 'package:auth_app/features/auth/login/data/datasources/login_remote_data_source.dart';
+import 'package:auth_app/features/auth/login/data/datasources/login_remote_data_source_impl.dart';
+import 'package:auth_app/features/auth/login/domain/repositories/login_repository.dart';
 import 'package:auth_app/features/auth/login/domain/usecases/login_usecase.dart';
-import 'package:auth_app/features/auth/login/domain/usecases/register_usecase.dart';
+import 'package:auth_app/features/auth/register/data/datasources/register_remote_data_source.dart';
+import 'package:auth_app/features/auth/register/data/datasources/register_remote_data_source_impl.dart';
+import 'package:auth_app/features/auth/register/data/repositories/register_repository_impl.dart';
+import 'package:auth_app/features/auth/register/domain/repositories/register_repository.dart';
+import 'package:auth_app/features/auth/register/domain/usecases/register_usecase.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
-import '../../features/auth/login/data/repositories/auth_repository_impl.dart';
+import '../../features/auth/login/data/repositories/login_repository_impl.dart';
 import '../../features/auth/login/presentation/bloc/auth_bloc.dart';
 import '../startup/app_startup.dart';
 import '../storage/secure_storage_impl.dart';
@@ -35,13 +39,20 @@ Future<void> init() async {
     () => NetworkServicesApi(sl<TokenStorage>(), sl<InterceptedHttpClient>()),
   );
 
-  // Register Auth Feature
-  sl.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthRemoteDataSourceImpl(sl<NetworkServicesApi>()),
+  // Remote Data Sources
+  sl.registerLazySingleton<LoginRemoteDataSource>(
+    () => LoginRemoteDataSourceImpl(sl<NetworkServicesApi>()),
+  );
+  sl.registerLazySingleton<RegisterRemoteDataSource>(
+    () => RegisterRemoteDataSourceImpl(sl<NetworkServicesApi>()),
   );
 
-  sl.registerLazySingleton<AuthRepository>(
-    () => AuthRepositoryImpl(sl<AuthRemoteDataSource>(), sl<TokenStorage>()),
+  // Repositories
+  sl.registerLazySingleton<LoginRepository>(
+    () => LoginRepositoryImpl(sl<LoginRemoteDataSource>(), sl<TokenStorage>()),
+  );
+  sl.registerLazySingleton<RegisterRepository>(
+    () => RegisterRepositoryImpl(sl<RegisterRemoteDataSource>()),
   );
 
   // Use Cases
