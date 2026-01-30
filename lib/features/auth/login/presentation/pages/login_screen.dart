@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../bloc/auth_bloc.dart';
-import '../widgets/gradient_button.dart';
+import '../bloc/login_bloc.dart';
+import '../../../../../core/widgets/gradient_button.dart';
 import '../widgets/login_field.dart';
 import '../widgets/social_button.dart';
 
@@ -41,9 +41,9 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Scaffold(
           backgroundColor: Pallete.backgroundColor,
           body: SafeArea(
-            child: BlocConsumer<AuthBloc, AuthState>(
+            child: BlocConsumer<LoginBloc, LoginState>(
               listener: (context, state) {
-                if (state is AuthFailure) {
+                if (state is LoginFailure) {
                   CustomSnackBar.showCustomSnackBar(
                     context,
                     false,
@@ -51,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   );
                 }
 
-                if (state is AuthLoginSuccess) {
+                if (state is LoginSuccess) {
                   CustomSnackBar.showCustomSnackBar(
                     context,
                     true,
@@ -110,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               GradientButton(
                                 buttonText: 'Sign in',
                                 onPressed: () {
-                                  BlocProvider.of<AuthBloc>(context).add(
+                                  BlocProvider.of<LoginBloc>(context).add(
                                     AuthLoginRequested(
                                       email: _emailController.text.trim(),
                                       password: _passwordController.text.trim(),
@@ -134,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                    if (state is AuthLoading) CircularLoader(),
+                    if (state is LoginLoading) CircularLoader(),
                   ],
                 );
               },

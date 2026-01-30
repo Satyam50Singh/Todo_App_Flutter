@@ -3,7 +3,7 @@ import 'package:auth_app/core/routes/app_routes.dart';
 import 'package:auth_app/core/utils/snackbar_utils.dart';
 import 'package:auth_app/core/utils/utils.dart';
 import 'package:auth_app/core/widgets/circular_loader.dart';
-import 'package:auth_app/features/auth/login/presentation/bloc/auth_bloc.dart';
+import 'package:auth_app/features/auth/login/presentation/bloc/login_bloc.dart';
 import 'package:auth_app/features/todo/presentation/widgets/todo_list_widgets/empty_todo_state.dart';
 import 'package:auth_app/features/todo/presentation/widgets/todo_list_widgets/todo_list_app_bar.dart';
 import 'package:auth_app/features/todo/presentation/widgets/todo_list_widgets/todo_list_tile.dart';
@@ -23,11 +23,11 @@ class TodoListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authState = context.watch<AuthBloc>().state;
+    final authState = context.watch<LoginBloc>().state;
 
-    return BlocListener<AuthBloc, AuthState>(
+    return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
-        if (state is AuthInitial) {
+        if (state is LoginInitial) {
           Navigator.pushNamedAndRemoveUntil(
             context,
             RouteName.loginScreen,
@@ -38,7 +38,7 @@ class TodoListScreen extends StatelessWidget {
       child: Scaffold(
         appBar: TodoListAppBar(
           onPressed: () {
-            context.read<AuthBloc>().add(AuthLogoutRequested());
+            context.read<LoginBloc>().add(AuthLogoutRequested());
           },
         ),
         floatingActionButton: FloatingActionButton(
@@ -131,7 +131,7 @@ class TodoListScreen extends StatelessWidget {
               ),
             ),
 
-            if (authState is AuthLoading) CircularLoader(),
+            if (authState is LoginLoading) CircularLoader(),
           ],
         ),
       ),

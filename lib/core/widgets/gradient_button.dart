@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../core/theme/pallete.dart';
+import '../theme/pallete.dart';
 
 class GradientButton extends StatelessWidget {
   final String buttonText;

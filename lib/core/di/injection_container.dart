@@ -14,12 +14,13 @@ import 'package:auth_app/features/auth/register/data/datasources/register_remote
 import 'package:auth_app/features/auth/register/data/repositories/register_repository_impl.dart';
 import 'package:auth_app/features/auth/register/domain/repositories/register_repository.dart';
 import 'package:auth_app/features/auth/register/domain/usecases/register_usecase.dart';
+import 'package:auth_app/features/auth/register/presentation/bloc/register_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
 import '../../features/auth/login/data/repositories/login_repository_impl.dart';
-import '../../features/auth/login/presentation/bloc/auth_bloc.dart';
+import '../../features/auth/login/presentation/bloc/login_bloc.dart';
 import '../startup/app_startup.dart';
 import '../storage/secure_storage_impl.dart';
 
@@ -60,10 +61,8 @@ Future<void> init() async {
   sl.registerLazySingleton<RegisterUseCase>(() => RegisterUseCase(sl()));
 
   // Bloc must be factory, not singleton
-  sl.registerFactory(
-    () =>
-        AuthBloc(sl<LoginUseCase>(), sl<RegisterUseCase>(), sl<IValidations>()),
-  );
+  sl.registerFactory(() => LoginBloc(sl<LoginUseCase>(), sl<IValidations>()));
+  sl.registerFactory(() => RegisterBloc(sl<RegisterUseCase>()));
 
   // App Startup
   sl.registerLazySingleton<AppStartup>(() => AppStartup(sl()));

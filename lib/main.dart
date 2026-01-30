@@ -1,7 +1,8 @@
 import 'package:auth_app/core/bloc/app_bloc_observer.dart';
 import 'package:auth_app/core/routes/app_navigator.dart';
 import 'package:auth_app/core/routes/app_routes.dart';
-import 'package:auth_app/features/auth/login/presentation/bloc/auth_bloc.dart';
+import 'package:auth_app/features/auth/login/presentation/bloc/login_bloc.dart';
+import 'package:auth_app/features/auth/register/presentation/bloc/register_bloc.dart';
 import 'package:auth_app/features/home/presentation/bloc/counter_bloc.dart';
 import 'package:auth_app/features/home/presentation/cubit/counter_cubit.dart';
 import 'package:auth_app/features/todo/presentation/cubit/todo_cubit.dart';
@@ -29,7 +30,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => CounterCubit()),
         BlocProvider(create: (_) => CounterBloc()),
         BlocProvider(create: (_) => TodoCubit()),
-        BlocProvider(create: (_) => sl<AuthBloc>()),
+        BlocProvider(create: (_) => sl<LoginBloc>()),
+        BlocProvider(create: (_) => sl<RegisterBloc>()),
       ],
       child: MaterialApp(
         localizationsDelegates: [FlutterQuillLocalizations.delegate],

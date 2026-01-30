@@ -9,9 +9,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/theme/pallete.dart';
 import '../../../../../core/widgets/circular_loader.dart';
-import '../../../login/presentation/bloc/auth_bloc.dart';
 import '../../../login/presentation/pages/login_screen.dart';
-import '../../../login/presentation/widgets/gradient_button.dart';
+import '../../../../../core/widgets/gradient_button.dart';
+import '../bloc/register_bloc.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -42,9 +42,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Scaffold(
           backgroundColor: Pallete.backgroundColor,
           body: SafeArea(
-            child: BlocConsumer<AuthBloc, AuthState>(
-              listener: (BuildContext context, AuthState state) {
-                if (state is AuthFailure) {
+            child: BlocConsumer<RegisterBloc, RegisterState>(
+              listener: (BuildContext context, RegisterState state) {
+                if (state is RegisterFailure) {
                   CustomSnackBar.showCustomSnackBar(
                     context,
                     false,
@@ -52,7 +52,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   );
                 }
 
-                if (state is AuthRegisterSuccess) {
+                if (state is RegisterSuccess) {
                   CustomSnackBar.showCustomSnackBar(
                     context,
                     true,
@@ -65,7 +65,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   );
                 }
               },
-              builder: (BuildContext context, AuthState state) {
+              builder: (BuildContext context, RegisterState state) {
                 return Stack(
                   children: [
                     SingleChildScrollView(
@@ -132,7 +132,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                     ),
-                    if (state is AuthLoading) CircularLoader(),
+                    if (state is RegisterLoading) CircularLoader(),
                   ],
                 );
               },
@@ -144,47 +144,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _doRegister() {
-    if (_usernameController.text.isEmpty) {
-      return CustomSnackBar.showCustomSnackBar(
-        context,
-        false,
-        'Username cannot be empty',
-      );
-    }
-    if (_emailController.text.isEmpty) {
-      return CustomSnackBar.showCustomSnackBar(
-        context,
-        false,
-        'Email cannot be empty',
-      );
-    }
-    if (_passwordController.text.isEmpty) {
-      return CustomSnackBar.showCustomSnackBar(
-        context,
-        false,
-        'Password cannot be empty',
-      );
-    }
-    if (_confirmPasswordController.text.isEmpty) {
-      return CustomSnackBar.showCustomSnackBar(
-        context,
-        false,
-        'Confirm password cannot be empty',
-      );
-    }
-    if (_passwordController.text != _confirmPasswordController.text) {
-      return CustomSnackBar.showCustomSnackBar(
-        context,
-        false,
-        'Passwords do not match',
-      );
-    }
-
-    BlocProvider.of<AuthBloc>(context).add(
+    BlocProvider.of<RegisterBloc>(context).add(
       AuthRegisterRequested(
         username: _usernameController.text,
         email: _emailController.text,
         password: _passwordController.text,
+        confirmPassword: _confirmPasswordController.text,
         fullName: '',
         mobileNumber: '',
       ),
