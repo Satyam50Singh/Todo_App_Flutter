@@ -45,7 +45,11 @@ class LoginRepositoryImpl extends BaseRepository implements LoginRepository {
 
   @override
   Future<Either<Failure, void>> logout() async {
-    await _storage.clearTokens();
-    return const Right(null);
+    try {
+      await _storage.clearTokens();
+      return const Right(null);
+    } catch (e) {
+      return Left(CacheException(e.toString()));
+    }
   }
 }

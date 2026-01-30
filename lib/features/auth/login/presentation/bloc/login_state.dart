@@ -23,3 +23,15 @@ final class LoginFailure extends LoginState {
 
   LoginFailure({this.errorMessage});
 }
+
+final class LogoutSuccess extends LoginState {
+  final String? message;
+
+  LogoutSuccess({this.message});
+}
+
+final class LogoutFailure extends LoginState {
+  final String? errorMessage;
+
+  LogoutFailure({this.errorMessage});
+}

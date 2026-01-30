@@ -9,6 +9,7 @@ import 'package:auth_app/features/auth/login/data/datasources/login_remote_data_
 import 'package:auth_app/features/auth/login/data/datasources/login_remote_data_source_impl.dart';
 import 'package:auth_app/features/auth/login/domain/repositories/login_repository.dart';
 import 'package:auth_app/features/auth/login/domain/usecases/login_usecase.dart';
+import 'package:auth_app/features/auth/login/domain/usecases/logout_use_case.dart';
 import 'package:auth_app/features/auth/register/data/datasources/register_remote_data_source.dart';
 import 'package:auth_app/features/auth/register/data/datasources/register_remote_data_source_impl.dart';
 import 'package:auth_app/features/auth/register/data/repositories/register_repository_impl.dart';
@@ -59,9 +60,13 @@ Future<void> init() async {
   // Use Cases
   sl.registerLazySingleton<LoginUseCase>(() => LoginUseCase(sl()));
   sl.registerLazySingleton<RegisterUseCase>(() => RegisterUseCase(sl()));
+  sl.registerLazySingleton<LogoutUseCase>(() => LogoutUseCase(sl()));
 
   // Bloc must be factory, not singleton
-  sl.registerFactory(() => LoginBloc(sl<LoginUseCase>(), sl<IValidations>()));
+  sl.registerFactory(
+    () =>
+        LoginBloc(sl<LoginUseCase>(), sl<LogoutUseCase>(), sl<IValidations>()),
+  );
   sl.registerFactory(() => RegisterBloc(sl<RegisterUseCase>()));
 
   // App Startup

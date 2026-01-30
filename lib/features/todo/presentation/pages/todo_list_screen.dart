@@ -27,11 +27,19 @@ class TodoListScreen extends StatelessWidget {
 
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
-        if (state is LoginInitial) {
+        if (state is LogoutSuccess) {
           Navigator.pushNamedAndRemoveUntil(
             context,
             RouteName.loginScreen,
             (route) => false,
+          );
+        }
+
+        if (state is LogoutFailure) {
+          CustomSnackBar.showCustomSnackBar(
+            context,
+            false,
+            state.errorMessage ?? 'Logout Failed!',
           );
         }
       },
