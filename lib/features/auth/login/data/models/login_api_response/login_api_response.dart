@@ -7,10 +7,10 @@ part 'login_api_response.g.dart';
 @freezed
 abstract class LoginApiResponse with _$LoginApiResponse {
   const factory LoginApiResponse({
-    @JsonKey(name: 'status') int? status,
-    @JsonKey(name: 'message') String? message,
-    @JsonKey(name: 'data') LoginResponseModel? data,
-    @JsonKey(name: 'errorMsg') String? errorMsg,
+    @JsonKey(name: 'Status') int? status,
+    @JsonKey(name: 'Message') String? message,
+    @JsonKey(name: 'Data') LoginResponseModel? data,
+    @JsonKey(name: 'ErrorMsg') String? errorMsg,
   }) = _LoginApiResponse;
 
   factory LoginApiResponse.fromJson(Map<String, dynamic> json) =>

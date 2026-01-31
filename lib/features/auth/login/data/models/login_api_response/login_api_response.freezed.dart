@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LoginApiResponse {
 
-@JsonKey(name: 'status') int? get status;@JsonKey(name: 'message') String? get message;@JsonKey(name: 'data') LoginResponseModel? get data;@JsonKey(name: 'errorMsg') String? get errorMsg;
+@JsonKey(name: 'Status') int? get status;@JsonKey(name: 'Message') String? get message;@JsonKey(name: 'Data') LoginResponseModel? get data;@JsonKey(name: 'ErrorMsg') String? get errorMsg;
 /// Create a copy of LoginApiResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $LoginApiResponseCopyWith<$Res>  {
   factory $LoginApiResponseCopyWith(LoginApiResponse value, $Res Function(LoginApiResponse) _then) = _$LoginApiResponseCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'status') int? status,@JsonKey(name: 'message') String? message,@JsonKey(name: 'data') LoginResponseModel? data,@JsonKey(name: 'errorMsg') String? errorMsg
+@JsonKey(name: 'Status') int? status,@JsonKey(name: 'Message') String? message,@JsonKey(name: 'Data') LoginResponseModel? data,@JsonKey(name: 'ErrorMsg') String? errorMsg
 });
 
 
@@ -168,7 +168,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'status')  int? status, @JsonKey(name: 'message')  String? message, @JsonKey(name: 'data')  LoginResponseModel? data, @JsonKey(name: 'errorMsg')  String? errorMsg)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'Status')  int? status, @JsonKey(name: 'Message')  String? message, @JsonKey(name: 'Data')  LoginResponseModel? data, @JsonKey(name: 'ErrorMsg')  String? errorMsg)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LoginApiResponse() when $default != null:
 return $default(_that.status,_that.message,_that.data,_that.errorMsg);case _:
@@ -189,7 +189,7 @@ return $default(_that.status,_that.message,_that.data,_that.errorMsg);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'status')  int? status, @JsonKey(name: 'message')  String? message, @JsonKey(name: 'data')  LoginResponseModel? data, @JsonKey(name: 'errorMsg')  String? errorMsg)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'Status')  int? status, @JsonKey(name: 'Message')  String? message, @JsonKey(name: 'Data')  LoginResponseModel? data, @JsonKey(name: 'ErrorMsg')  String? errorMsg)  $default,) {final _that = this;
 switch (_that) {
 case _LoginApiResponse():
 return $default(_that.status,_that.message,_that.data,_that.errorMsg);case _:
@@ -209,7 +209,7 @@ return $default(_that.status,_that.message,_that.data,_that.errorMsg);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'status')  int? status, @JsonKey(name: 'message')  String? message, @JsonKey(name: 'data')  LoginResponseModel? data, @JsonKey(name: 'errorMsg')  String? errorMsg)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'Status')  int? status, @JsonKey(name: 'Message')  String? message, @JsonKey(name: 'Data')  LoginResponseModel? data, @JsonKey(name: 'ErrorMsg')  String? errorMsg)?  $default,) {final _that = this;
 switch (_that) {
 case _LoginApiResponse() when $default != null:
 return $default(_that.status,_that.message,_that.data,_that.errorMsg);case _:
@@ -224,13 +224,13 @@ return $default(_that.status,_that.message,_that.data,_that.errorMsg);case _:
 @JsonSerializable()
 
 class _LoginApiResponse implements LoginApiResponse {
-  const _LoginApiResponse({@JsonKey(name: 'status') this.status, @JsonKey(name: 'message') this.message, @JsonKey(name: 'data') this.data, @JsonKey(name: 'errorMsg') this.errorMsg});
+  const _LoginApiResponse({@JsonKey(name: 'Status') this.status, @JsonKey(name: 'Message') this.message, @JsonKey(name: 'Data') this.data, @JsonKey(name: 'ErrorMsg') this.errorMsg});
   factory _LoginApiResponse.fromJson(Map<String, dynamic> json) => _$LoginApiResponseFromJson(json);
 
-@override@JsonKey(name: 'status') final  int? status;
-@override@JsonKey(name: 'message') final  String? message;
-@override@JsonKey(name: 'data') final  LoginResponseModel? data;
-@override@JsonKey(name: 'errorMsg') final  String? errorMsg;
+@override@JsonKey(name: 'Status') final  int? status;
+@override@JsonKey(name: 'Message') final  String? message;
+@override@JsonKey(name: 'Data') final  LoginResponseModel? data;
+@override@JsonKey(name: 'ErrorMsg') final  String? errorMsg;
 
 /// Create a copy of LoginApiResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -265,7 +265,7 @@ abstract mixin class _$LoginApiResponseCopyWith<$Res> implements $LoginApiRespon
   factory _$LoginApiResponseCopyWith(_LoginApiResponse value, $Res Function(_LoginApiResponse) _then) = __$LoginApiResponseCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'status') int? status,@JsonKey(name: 'message') String? message,@JsonKey(name: 'data') LoginResponseModel? data,@JsonKey(name: 'errorMsg') String? errorMsg
+@JsonKey(name: 'Status') int? status,@JsonKey(name: 'Message') String? message,@JsonKey(name: 'Data') LoginResponseModel? data,@JsonKey(name: 'ErrorMsg') String? errorMsg
 });
 
 

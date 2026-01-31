@@ -8,18 +8,18 @@ part of 'login_api_response.dart';
 
 _LoginApiResponse _$LoginApiResponseFromJson(Map<String, dynamic> json) =>
     _LoginApiResponse(
-      status: (json['status'] as num?)?.toInt(),
-      message: json['message'] as String?,
-      data: json['data'] == null
+      status: (json['Status'] as num?)?.toInt(),
+      message: json['Message'] as String?,
+      data: json['Data'] == null
           ? null
-          : LoginResponseModel.fromJson(json['data'] as Map<String, dynamic>),
-      errorMsg: json['errorMsg'] as String?,
+          : LoginResponseModel.fromJson(json['Data'] as Map<String, dynamic>),
+      errorMsg: json['ErrorMsg'] as String?,
     );
 
 Map<String, dynamic> _$LoginApiResponseToJson(_LoginApiResponse instance) =>
     <String, dynamic>{
-      'status': instance.status,
-      'message': instance.message,
-      'data': instance.data,
-      'errorMsg': instance.errorMsg,
+      'Status': instance.status,
+      'Message': instance.message,
+      'Data': instance.data,
+      'ErrorMsg': instance.errorMsg,
     };
