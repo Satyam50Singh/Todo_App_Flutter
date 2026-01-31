@@ -28,7 +28,10 @@ class NetworkServicesApi implements BaseApiServices {
             },
           )
           .timeout(const Duration(seconds: 50));
+
       jsonResponse = await handleResponse(response);
+    } on TimeoutException {
+      throw RequestTimeout();
     } on Failure {
       rethrow;
     } catch (e) {
@@ -43,7 +46,7 @@ class NetworkServicesApi implements BaseApiServices {
     dynamic jsonResponse;
 
     String finalUrl = '$baseUrl$path';
-    final url= Uri.parse(finalUrl);
+    final url = Uri.parse(finalUrl);
 
     try {
       final request = http.Request('POST', url);
@@ -60,6 +63,8 @@ class NetworkServicesApi implements BaseApiServices {
           .timeout(const Duration(seconds: NetworkConstants.timeout));
 
       jsonResponse = await handleResponse(response);
+    } on TimeoutException {
+      throw RequestTimeout();
     } on Failure {
       rethrow;
     } catch (e) {
