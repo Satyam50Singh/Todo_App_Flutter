@@ -1,5 +1,5 @@
-import 'package:auth_app/features/auth/login/data/models/login/login_response_model.dart';
+import '../models/login_api_response/login_api_response.dart';
 
 abstract class LoginRemoteDataSource {
-  Future<LoginResponseModel> login(String email, String password);
+  Future<LoginApiResponse> login(String email, String password);
 }

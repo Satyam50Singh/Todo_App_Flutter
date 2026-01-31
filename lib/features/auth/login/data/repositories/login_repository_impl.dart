@@ -1,6 +1,7 @@
 import 'package:auth_app/core/base/base_repository.dart';
 import 'package:auth_app/core/network/token_storage.dart';
 import 'package:auth_app/features/auth/login/data/datasources/login_remote_data_source.dart';
+import 'package:auth_app/features/auth/login/data/mappers/login_data_mapper.dart';
 import 'package:auth_app/features/auth/login/domain/entities/login_entity.dart';
 import 'package:auth_app/features/auth/login/domain/repositories/login_repository.dart';
 import 'package:dartz/dartz.dart';
@@ -19,27 +20,20 @@ class LoginRepositoryImpl extends BaseRepository implements LoginRepository {
     required String password,
   }) async {
     return execute(() async {
-      final loginResponseModel = await _loginRemoteDataSource.login(
-        email,
-        password,
-      );
+      final response = await _loginRemoteDataSource.login(email, password);
+
+      final data = response.data;
+
+      if (data == null) {
+        throw ServerException('Login data missing');
+      }
 
       await _storage.saveTokens(
-        accessToken: loginResponseModel.accessToken,
-        refreshToken: loginResponseModel.refreshToken,
+        accessToken: data.accessToken,
+        refreshToken: data.refreshToken,
       );
 
-      return LoginEntity(
-        id: loginResponseModel.id,
-        email: loginResponseModel.email,
-        username: loginResponseModel.username,
-        firstName: loginResponseModel.firstName,
-        lastName: loginResponseModel.lastName,
-        gender: loginResponseModel.gender,
-        image: loginResponseModel.image,
-        accessToken: loginResponseModel.accessToken,
-        refreshToken: loginResponseModel.refreshToken,
-      );
+      return data.toEntity();
     });
   }
 

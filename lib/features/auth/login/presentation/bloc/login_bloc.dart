@@ -39,10 +39,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       LoginParams(username: email, password: password),
     );
 
-    if (kDebugMode) {
-      print(result);
-    }
-
     result.fold(
       (failure) => emit(LoginFailure(errorMessage: failure.toString())),
       (user) => emit(
