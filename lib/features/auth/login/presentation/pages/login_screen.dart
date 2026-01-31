@@ -65,77 +65,79 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
               },
               builder: (context, state) {
-                return Stack(
-                  children: [
-                    SingleChildScrollView(
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Column(
-                            children: [
-                              Image.asset('assets/images/sign_in_balls.png'),
-                              const Text(
-                                'Sign in',
-                                style: TextStyle(
-                                  fontSize: 50,
-                                  fontWeight: FontWeight.bold,
+                return SizedBox.expand(
+                  child: Stack(
+                    children: [
+                      SingleChildScrollView(
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Column(
+                              children: [
+                                Image.asset('assets/images/sign_in_balls.png'),
+                                const Text(
+                                  'Sign in',
+                                  style: TextStyle(
+                                    fontSize: 50,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 50),
-                              const SocialButton(
-                                iconPath: 'assets/svgs/f_logo.svg',
-                                labelText: 'Continue with Facebook',
-                                horizontalPadding: 60,
-                              ),
-                              const SizedBox(height: 15),
-                              const SocialButton(
-                                iconPath: "assets/svgs/g_logo.svg",
-                                labelText: 'Continue with Google',
-                              ),
-                              const SizedBox(height: 15),
-                              const Text("Or", style: TextStyle(fontSize: 17)),
-                              const SizedBox(height: 15),
-                              LoginField(
-                                hintText: 'Email',
-                                controller: _emailController,
-                                isPassword: false,
-                              ),
-                              const SizedBox(height: 15),
-                              LoginField(
-                                hintText: 'Password',
-                                controller: _passwordController,
-                                isPassword: true,
-                              ),
-                              const SizedBox(height: 30),
-                              GradientButton(
-                                buttonText: 'Sign in',
-                                onPressed: () {
-                                  BlocProvider.of<LoginBloc>(context).add(
-                                    AuthLoginRequested(
-                                      email: _emailController.text.trim(),
-                                      password: _passwordController.text.trim(),
-                                    ),
-                                  );
-                                },
-                              ),
+                                const SizedBox(height: 50),
+                                const SocialButton(
+                                  iconPath: 'assets/svgs/f_logo.svg',
+                                  labelText: 'Continue with Facebook',
+                                  horizontalPadding: 60,
+                                ),
+                                const SizedBox(height: 15),
+                                const SocialButton(
+                                  iconPath: "assets/svgs/g_logo.svg",
+                                  labelText: 'Continue with Google',
+                                ),
+                                const SizedBox(height: 15),
+                                const Text("Or", style: TextStyle(fontSize: 17)),
+                                const SizedBox(height: 15),
+                                LoginField(
+                                  hintText: 'Email',
+                                  controller: _emailController,
+                                  isPassword: false,
+                                ),
+                                const SizedBox(height: 15),
+                                LoginField(
+                                  hintText: 'Password',
+                                  controller: _passwordController,
+                                  isPassword: true,
+                                ),
+                                const SizedBox(height: 30),
+                                GradientButton(
+                                  buttonText: 'Sign in',
+                                  onPressed: () {
+                                    BlocProvider.of<LoginBloc>(context).add(
+                                      AuthLoginRequested(
+                                        email: _emailController.text.trim(),
+                                        password: _passwordController.text.trim(),
+                                      ),
+                                    );
+                                  },
+                                ),
 
-                              const SizedBox(height: 20),
-                              LoginRedirectText(
-                                onTap: () {
-                                  Navigator.of(context).pushReplacement(
-                                    CupertinoPageRoute(
-                                      builder: (_) => const RegisterScreen(),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
+                                const SizedBox(height: 20),
+                                LoginRedirectText(
+                                  onTap: () {
+                                    Navigator.of(context).pushReplacement(
+                                      CupertinoPageRoute(
+                                        builder: (_) => const RegisterScreen(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    if (state is LoginLoading) CircularLoader(),
-                  ],
+                      if (state is LoginLoading) CircularLoader(),
+                    ],
+                  ),
                 );
               },
             ),

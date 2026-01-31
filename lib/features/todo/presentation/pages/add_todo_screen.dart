@@ -62,72 +62,76 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
           }
         },
         builder: (context, state) {
-          return Stack(
-            children: [
-              SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Heading Text
-                    Text(
-                      'What\'s on your mind?',
-                      style: Theme.of(context).textTheme.headlineSmall
-                          ?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 4),
+          return SizedBox.expand(
+            child: Stack(
+              children: [
+                SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Heading Text
+                      Text(
+                        'What\'s on your mind?',
+                        style: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 4),
 
-                    Text(
-                      'Add details to your task',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
-                    ),
-                    const SizedBox(height: 20),
+                      Text(
+                        'Add details to your task',
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+                      ),
+                      const SizedBox(height: 20),
 
-                    TitleField(titleController: _titleController),
+                      TitleField(titleController: _titleController),
 
-                    const SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
-                    Text(
-                      'Description',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
+                      Text(
+                        'Description',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
 
-                    DescriptionCard(quillDescController: _quillDescController),
+                      DescriptionCard(
+                        quillDescController: _quillDescController,
+                      ),
 
-                    SizedBox(height: 20),
+                      SizedBox(height: 20),
 
-                    DueDateContainer(
-                      isDueDateRequired: isDueDateRequired,
-                      dateController: _dateController,
-                      onInkWellTap: () {
-                        setState(() {
-                          isDueDateRequired = !isDueDateRequired;
-                          if (isDueDateRequired) {
-                            _dateController.text = "";
-                          }
-                        });
-                      },
-                      onChanged: (value) {
-                        setState(() {
-                          isDueDateRequired = value ?? false;
-                        });
-                      },
-                      onCalendarTextFieldTap: () async {
-                        FocusScope.of(context).unfocus();
-                        await showCalendar();
-                      },
-                    ),
+                      DueDateContainer(
+                        isDueDateRequired: isDueDateRequired,
+                        dateController: _dateController,
+                        onInkWellTap: () {
+                          setState(() {
+                            isDueDateRequired = !isDueDateRequired;
+                            if (isDueDateRequired) {
+                              _dateController.text = "";
+                            }
+                          });
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            isDueDateRequired = value ?? false;
+                          });
+                        },
+                        onCalendarTextFieldTap: () async {
+                          FocusScope.of(context).unfocus();
+                          await showCalendar();
+                        },
+                      ),
 
-                    SizedBox(height: 30),
+                      SizedBox(height: 30),
 
-                    AddTodoButton(onPressed: () => addTodo(todoBloc)),
-                  ],
+                      AddTodoButton(onPressed: () => addTodo(todoBloc)),
+                    ],
+                  ),
                 ),
-              ),
-              if (state is AddTodoLoading) CircularLoader(),
-            ],
+                if (state is AddTodoLoading) CircularLoader(),
+              ],
+            ),
           );
         },
       ),

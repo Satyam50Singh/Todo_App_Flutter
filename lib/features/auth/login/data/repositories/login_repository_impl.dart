@@ -45,6 +45,7 @@ class LoginRepositoryImpl extends BaseRepository implements LoginRepository {
   Future<Either<Failure, void>> logout() async {
     try {
       await _storage.clearTokens();
+      await _userStorage.clearUserId();
       return const Right(null);
     } catch (e) {
       return Left(CacheException(e.toString()));

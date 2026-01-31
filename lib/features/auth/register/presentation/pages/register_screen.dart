@@ -9,8 +9,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/theme/pallete.dart';
 import '../../../../../core/widgets/circular_loader.dart';
-import '../../../login/presentation/pages/login_screen.dart';
 import '../../../../../core/widgets/gradient_button.dart';
+import '../../../login/presentation/pages/login_screen.dart';
 import '../bloc/register_bloc.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -66,74 +66,76 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 }
               },
               builder: (BuildContext context, RegisterState state) {
-                return Stack(
-                  children: [
-                    SingleChildScrollView(
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Column(
-                            children: [
-                              Image.asset('assets/images/sign_in_balls.png'),
-                              const Text(
-                                'Register',
-                                style: TextStyle(
-                                  fontSize: 50,
-                                  fontWeight: FontWeight.bold,
+                return SizedBox.expand(
+                  child: Stack(
+                    children: [
+                      SingleChildScrollView(
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Column(
+                              children: [
+                                Image.asset('assets/images/sign_in_balls.png'),
+                                const Text(
+                                  'Register',
+                                  style: TextStyle(
+                                    fontSize: 50,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 30),
-                              RegisterField(
-                                hintText: 'Username',
-                                controller: _usernameController,
-                                isPassword: false,
-                                icon: const Icon(Icons.person),
-                              ),
-                              const SizedBox(height: 16),
-                              RegisterField(
-                                hintText: 'Email',
-                                controller: _emailController,
-                                isPassword: false,
-                                icon: const Icon(Icons.email),
-                              ),
-                              const SizedBox(height: 16),
-                              RegisterField(
-                                hintText: 'Password',
-                                controller: _passwordController,
-                                isPassword: true,
-                                icon: const Icon(Icons.lock),
-                              ),
-                              const SizedBox(height: 16),
-                              RegisterField(
-                                hintText: 'Confirm password',
-                                controller: _confirmPasswordController,
-                                isPassword: true,
-                                icon: const Icon(Icons.lock),
-                              ),
+                                const SizedBox(height: 30),
+                                RegisterField(
+                                  hintText: 'Username',
+                                  controller: _usernameController,
+                                  isPassword: false,
+                                  icon: const Icon(Icons.person),
+                                ),
+                                const SizedBox(height: 16),
+                                RegisterField(
+                                  hintText: 'Email',
+                                  controller: _emailController,
+                                  isPassword: false,
+                                  icon: const Icon(Icons.email),
+                                ),
+                                const SizedBox(height: 16),
+                                RegisterField(
+                                  hintText: 'Password',
+                                  controller: _passwordController,
+                                  isPassword: true,
+                                  icon: const Icon(Icons.lock),
+                                ),
+                                const SizedBox(height: 16),
+                                RegisterField(
+                                  hintText: 'Confirm password',
+                                  controller: _confirmPasswordController,
+                                  isPassword: true,
+                                  icon: const Icon(Icons.lock),
+                                ),
 
-                              const SizedBox(height: 30),
-                              GradientButton(
-                                buttonText: 'Register',
-                                onPressed: () => _doRegister(),
-                              ),
+                                const SizedBox(height: 30),
+                                GradientButton(
+                                  buttonText: 'Register',
+                                  onPressed: () => _doRegister(),
+                                ),
 
-                              const SizedBox(height: 20),
-                              RegisterRedirectText(
-                                onPressed: () {
-                                  Navigator.of(context).pushReplacement(
-                                    CupertinoPageRoute(
-                                      builder: (_) => const LoginScreen(),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
+                                const SizedBox(height: 20),
+                                RegisterRedirectText(
+                                  onPressed: () {
+                                    Navigator.of(context).pushReplacement(
+                                      CupertinoPageRoute(
+                                        builder: (_) => const LoginScreen(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    if (state is RegisterLoading) CircularLoader(),
-                  ],
+                      if (state is RegisterLoading) CircularLoader(),
+                    ],
+                  ),
                 );
               },
             ),

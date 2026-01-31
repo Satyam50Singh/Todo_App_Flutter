@@ -5,5 +5,8 @@ class NetworkConstants {
 
   static const String authLogin = '/auth/login';
   static const String authRegister = '/auth/register';
-  static const String addTodo = '/todo/add';
+  static const String addTodo = '/todo/add_todo';
+  static const String deleteTodo = '/todo/delete_todo';
+  static const String updateTodo = '/todo/update_todo';
+  static const String getTodos = '/todo/get_all_todo';
 }
