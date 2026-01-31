@@ -16,7 +16,7 @@ class TodoListTile extends StatelessWidget {
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       leading: const Icon(Icons.check_circle_outline, color: Colors.purple),
       title: Text(
-        todoModel.name,
+        todoModel.title,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
         style: Theme.of(

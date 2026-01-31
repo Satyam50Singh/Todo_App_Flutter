@@ -14,7 +14,6 @@ class SecureTokenStorage implements TokenStorage {
 
   @override
   Future<String?> getRefreshToken() {
-    // TODO: implement getRefreshToken
     return _secureStorage.read(StorageKeys.refreshToken);
   }
 

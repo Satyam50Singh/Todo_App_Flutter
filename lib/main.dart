@@ -5,6 +5,7 @@ import 'package:auth_app/features/auth/login/presentation/bloc/login_bloc.dart';
 import 'package:auth_app/features/auth/register/presentation/bloc/register_bloc.dart';
 import 'package:auth_app/features/home/presentation/bloc/counter_bloc.dart';
 import 'package:auth_app/features/home/presentation/cubit/counter_cubit.dart';
+import 'package:auth_app/features/todo/presentation/bloc/todo_bloc.dart';
 import 'package:auth_app/features/todo/presentation/cubit/todo_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,6 +33,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => TodoCubit()),
         BlocProvider(create: (_) => sl<LoginBloc>()),
         BlocProvider(create: (_) => sl<RegisterBloc>()),
+        BlocProvider(create: (_) => sl<TodoBloc>()),
+
       ],
       child: MaterialApp(
         localizationsDelegates: [FlutterQuillLocalizations.delegate],

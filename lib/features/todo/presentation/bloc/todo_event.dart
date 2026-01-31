@@ -1,20 +1,18 @@
-class TodoModel {
+part of 'todo_bloc.dart';
+
+@immutable
+sealed class TodoEvent {}
+
+class AddTodoRequested extends TodoEvent {
   final String userId;
   final String title;
   final String description;
   final String dueDate;
-  final String createdAt;
 
-  TodoModel({
+  AddTodoRequested({
     required this.userId,
     required this.title,
     required this.description,
     required this.dueDate,
-    required this.createdAt,
   });
-
-  @override
-  String toString() {
-    return super.toString();
-  }
 }

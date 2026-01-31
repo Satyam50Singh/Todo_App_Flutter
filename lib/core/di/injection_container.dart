@@ -16,12 +16,18 @@ import 'package:auth_app/features/auth/register/data/repositories/register_repos
 import 'package:auth_app/features/auth/register/domain/repositories/register_repository.dart';
 import 'package:auth_app/features/auth/register/domain/usecases/register_usecase.dart';
 import 'package:auth_app/features/auth/register/presentation/bloc/register_bloc.dart';
+import 'package:auth_app/features/todo/data/datasources/todo_remote_datasource.dart';
+import 'package:auth_app/features/todo/data/repositories/todo_repository_impl.dart';
+import 'package:auth_app/features/todo/domain/usecases/add_todo_usecase.dart';
+import 'package:auth_app/features/todo/presentation/bloc/todo_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
 import '../../features/auth/login/data/repositories/login_repository_impl.dart';
 import '../../features/auth/login/presentation/bloc/login_bloc.dart';
+import '../../features/todo/data/datasources/todo_remote_datasource_impl.dart';
+import '../../features/todo/domain/repositories/todo_repository.dart';
 import '../startup/app_startup.dart';
 import '../storage/secure_storage_impl.dart';
 
@@ -48,6 +54,9 @@ Future<void> init() async {
   sl.registerLazySingleton<RegisterRemoteDataSource>(
     () => RegisterRemoteDataSourceImpl(sl<NetworkServicesApi>()),
   );
+  sl.registerLazySingleton<TodoRemoteDatasource>(
+    () => TodoRemoteDatasourceImpl(sl<NetworkServicesApi>()),
+  );
 
   // Repositories
   sl.registerLazySingleton<LoginRepository>(
@@ -56,11 +65,15 @@ Future<void> init() async {
   sl.registerLazySingleton<RegisterRepository>(
     () => RegisterRepositoryImpl(sl<RegisterRemoteDataSource>()),
   );
+  sl.registerLazySingleton<TodoRepository>(
+    () => TodoRepositoryImpl(sl<TodoRemoteDatasource>()),
+  );
 
   // Use Cases
   sl.registerLazySingleton<LoginUseCase>(() => LoginUseCase(sl()));
   sl.registerLazySingleton<RegisterUseCase>(() => RegisterUseCase(sl()));
   sl.registerLazySingleton<LogoutUseCase>(() => LogoutUseCase(sl()));
+  sl.registerLazySingleton<AddTodoUseCase>(() => AddTodoUseCase(sl()));
 
   // Bloc must be factory, not singleton
   sl.registerFactory(
@@ -68,6 +81,7 @@ Future<void> init() async {
         LoginBloc(sl<LoginUseCase>(), sl<LogoutUseCase>(), sl<IValidations>()),
   );
   sl.registerFactory(() => RegisterBloc(sl<RegisterUseCase>()));
+  sl.registerFactory(() => TodoBloc(sl<AddTodoUseCase>()));
 
   // App Startup
   sl.registerLazySingleton<AppStartup>(() => AppStartup(sl()));

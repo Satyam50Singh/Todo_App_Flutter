@@ -6,7 +6,8 @@ class TodoCubit extends Cubit<List<TodoModel>> {
 
   void addTodo(String title, String description, String dueDate) {
     final todo = TodoModel(
-      name: title,
+      userId: "0",
+      title: title,
       description: description,
       dueDate: dueDate,
       createdAt: DateTime.now().toString(),

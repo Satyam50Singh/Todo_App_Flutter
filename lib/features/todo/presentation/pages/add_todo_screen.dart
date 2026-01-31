@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:auth_app/core/theme/pallete.dart';
+import 'package:auth_app/features/todo/presentation/bloc/todo_bloc.dart';
 import 'package:auth_app/features/todo/presentation/widgets/add_todo_widgets/description_card.dart';
 import 'package:auth_app/features/todo/presentation/widgets/add_todo_widgets/due_date_container.dart';
 import 'package:auth_app/features/todo/presentation/widgets/add_todo_widgets/title_field.dart';
@@ -9,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 
 import '../../../../core/utils/snackbar_utils.dart';
-import '../cubit/todo_cubit.dart';
+import '../../../../core/widgets/circular_loader.dart';
 import '../widgets/add_todo_widgets/add_todo_button.dart';
 
 class AddTodoScreen extends StatefulWidget {
@@ -28,7 +29,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final todoCubit = BlocProvider.of<TodoCubit>(context);
+    final todoBloc = BlocProvider.of<TodoBloc>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -37,65 +38,98 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
         foregroundColor: Colors.white,
         elevation: 4,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Heading Text
-            Text(
-              'What\'s on your mind?',
-              style: Theme.of(
-                context,
-              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
+      body: BlocConsumer<TodoBloc, TodoState>(
+        listener: (context, state) {
+          if (state is AddTodoFailure) {
+            _titleController.clear();
+            _quillDescController.clear();
+            _dateController.clear();
+            setState(() => isDueDateRequired = false);
 
-            Text(
-              'Add details to your task',
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
-            ),
-            const SizedBox(height: 20),
+            CustomSnackBar.showCustomSnackBar(
+              context,
+              false,
+              state.errorMsg ?? 'Todo Addition Failed!',
+            );
+          }
 
-            TitleField(titleController: _titleController),
+          if (state is AddTodoSuccess) {
+            CustomSnackBar.showCustomSnackBar(
+              context,
+              true,
+              state.message ?? 'Todo Added Successfully!',
+            );
+          }
+        },
+        builder: (context, state) {
+          return Stack(
+            children: [
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Heading Text
+                    Text(
+                      'What\'s on your mind?',
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 4),
 
-            const SizedBox(height: 20),
+                    Text(
+                      'Add details to your task',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+                    ),
+                    const SizedBox(height: 20),
 
-            Text('Description', style: Theme.of(context).textTheme.titleMedium),
+                    TitleField(titleController: _titleController),
 
-            DescriptionCard(quillDescController: _quillDescController),
+                    const SizedBox(height: 20),
 
-            SizedBox(height: 20),
+                    Text(
+                      'Description',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
 
-            DueDateContainer(
-              isDueDateRequired: isDueDateRequired,
-              dateController: _dateController,
-              onInkWellTap: () {
-                setState(() {
-                  isDueDateRequired = !isDueDateRequired;
-                  if (isDueDateRequired) {
-                    _dateController.text = "";
-                  }
-                });
-              },
-              onChanged: (value) {
-                setState(() {
-                  isDueDateRequired = value ?? false;
-                });
-              },
-              onCalendarTextFieldTap: () async {
-                FocusScope.of(context).unfocus();
-                await showCalendar();
-              },
-            ),
+                    DescriptionCard(quillDescController: _quillDescController),
 
-            SizedBox(height: 30),
+                    SizedBox(height: 20),
 
-            AddTodoButton(onPressed: () => addTodo(todoCubit)),
-          ],
-        ),
+                    DueDateContainer(
+                      isDueDateRequired: isDueDateRequired,
+                      dateController: _dateController,
+                      onInkWellTap: () {
+                        setState(() {
+                          isDueDateRequired = !isDueDateRequired;
+                          if (isDueDateRequired) {
+                            _dateController.text = "";
+                          }
+                        });
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          isDueDateRequired = value ?? false;
+                        });
+                      },
+                      onCalendarTextFieldTap: () async {
+                        FocusScope.of(context).unfocus();
+                        await showCalendar();
+                      },
+                    ),
+
+                    SizedBox(height: 30),
+
+                    AddTodoButton(onPressed: () => addTodo(todoBloc)),
+                  ],
+                ),
+              ),
+              if (state is AddTodoLoading) CircularLoader(),
+            ],
+          );
+        },
       ),
     );
   }
@@ -166,21 +200,22 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
     }
   }
 
-  void addTodo(TodoCubit todoCubit) {
+  void addTodo(TodoBloc todoBloc) {
     FocusScope.of(context).unfocus();
 
     if (!checkValidations()) {
       return;
     }
-    todoCubit.addTodo(
-      _titleController.text.trim(),
-      jsonEncode(_quillDescController.document.toDelta().toJson()),
-      _dateController.text.trim(),
+
+    todoBloc.add(
+      AddTodoRequested(
+        userId: "0",
+        title: _titleController.text.trim(),
+        description: jsonEncode(
+          _quillDescController.document.toDelta().toJson(),
+        ),
+        dueDate: _dateController.text.trim(),
+      ),
     );
-    CustomSnackBar.showCustomSnackBar(context, true, "Todo added Successfully");
-    _titleController.clear();
-    _quillDescController.clear();
-    _dateController.clear();
-    setState(() => isDueDateRequired = false);
   }
 }

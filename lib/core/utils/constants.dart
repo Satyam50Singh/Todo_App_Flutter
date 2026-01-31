@@ -4,4 +4,8 @@ class Constants {
   static const String email = 'email';
   static const String fullName = 'fullName';
   static const String mobileNumber = 'mobileNumber';
+  static const String title = 'title';
+  static const String description = 'description';
+  static const String dueDate = 'dueDate';
+  static const String userId = 'userId';
 }

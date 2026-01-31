@@ -80,7 +80,7 @@ class TodoListScreen extends StatelessWidget {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
                                 child: Slidable(
-                                  key: ValueKey(todo.name),
+                                  key: ValueKey(todo.title),
                                   endActionPane: ActionPane(
                                     motion: const DrawerMotion(),
                                     extentRatio: 0.20,
@@ -151,7 +151,7 @@ class TodoListScreen extends StatelessWidget {
       ClipboardData(
         text:
             '''
-        📝 ${todo.name}
+        📝 ${todo.title}
         \n📄 Description:
         \n${Utils.quillJsonToPlainText(todo.description)}
         \n📅 Due Date: ${todo.dueDate}
@@ -171,7 +171,7 @@ class TodoListScreen extends StatelessWidget {
         ShareParams(
           text:
               '''
-            📝 ${todo.name}
+            📝 ${todo.title}
             \n📄 Description:
             \n${Utils.quillJsonToPlainText(todo.description)}
             \n📅 Due Date: ${todo.dueDate}
