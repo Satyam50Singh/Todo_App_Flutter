@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AddTodoResponseModel {
 
-@JsonKey(name: 'status') int? get status;@JsonKey(name: 'message') String? get message;
+@JsonKey(name: 'status') int? get status;@JsonKey(name: 'message') String? get message;@JsonKey(name: 'errorMsg') String? get errorMsg;
 /// Create a copy of AddTodoResponseModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $AddTodoResponseModelCopyWith<AddTodoResponseModel> get copyWith => _$AddTodoRes
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AddTodoResponseModel&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AddTodoResponseModel&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message)&&(identical(other.errorMsg, errorMsg) || other.errorMsg == errorMsg));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,status,message);
+int get hashCode => Object.hash(runtimeType,status,message,errorMsg);
 
 @override
 String toString() {
-  return 'AddTodoResponseModel(status: $status, message: $message)';
+  return 'AddTodoResponseModel(status: $status, message: $message, errorMsg: $errorMsg)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $AddTodoResponseModelCopyWith<$Res>  {
   factory $AddTodoResponseModelCopyWith(AddTodoResponseModel value, $Res Function(AddTodoResponseModel) _then) = _$AddTodoResponseModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'status') int? status,@JsonKey(name: 'message') String? message
+@JsonKey(name: 'status') int? status,@JsonKey(name: 'message') String? message,@JsonKey(name: 'errorMsg') String? errorMsg
 });
 
 
@@ -65,10 +65,11 @@ class _$AddTodoResponseModelCopyWithImpl<$Res>
 
 /// Create a copy of AddTodoResponseModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = freezed,Object? message = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = freezed,Object? message = freezed,Object? errorMsg = freezed,}) {
   return _then(_self.copyWith(
 status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as int?,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String?,errorMsg: freezed == errorMsg ? _self.errorMsg : errorMsg // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -154,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'status')  int? status, @JsonKey(name: 'message')  String? message)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'status')  int? status, @JsonKey(name: 'message')  String? message, @JsonKey(name: 'errorMsg')  String? errorMsg)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AddTodoResponseModel() when $default != null:
-return $default(_that.status,_that.message);case _:
+return $default(_that.status,_that.message,_that.errorMsg);case _:
   return orElse();
 
 }
@@ -175,10 +176,10 @@ return $default(_that.status,_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'status')  int? status, @JsonKey(name: 'message')  String? message)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'status')  int? status, @JsonKey(name: 'message')  String? message, @JsonKey(name: 'errorMsg')  String? errorMsg)  $default,) {final _that = this;
 switch (_that) {
 case _AddTodoResponseModel():
-return $default(_that.status,_that.message);case _:
+return $default(_that.status,_that.message,_that.errorMsg);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +196,10 @@ return $default(_that.status,_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'status')  int? status, @JsonKey(name: 'message')  String? message)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'status')  int? status, @JsonKey(name: 'message')  String? message, @JsonKey(name: 'errorMsg')  String? errorMsg)?  $default,) {final _that = this;
 switch (_that) {
 case _AddTodoResponseModel() when $default != null:
-return $default(_that.status,_that.message);case _:
+return $default(_that.status,_that.message,_that.errorMsg);case _:
   return null;
 
 }
@@ -210,11 +211,12 @@ return $default(_that.status,_that.message);case _:
 @JsonSerializable()
 
 class _AddTodoResponseModel implements AddTodoResponseModel {
-  const _AddTodoResponseModel({@JsonKey(name: 'status') this.status, @JsonKey(name: 'message') this.message});
+  const _AddTodoResponseModel({@JsonKey(name: 'status') this.status, @JsonKey(name: 'message') this.message, @JsonKey(name: 'errorMsg') this.errorMsg});
   factory _AddTodoResponseModel.fromJson(Map<String, dynamic> json) => _$AddTodoResponseModelFromJson(json);
 
 @override@JsonKey(name: 'status') final  int? status;
 @override@JsonKey(name: 'message') final  String? message;
+@override@JsonKey(name: 'errorMsg') final  String? errorMsg;
 
 /// Create a copy of AddTodoResponseModel
 /// with the given fields replaced by the non-null parameter values.
@@ -229,16 +231,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddTodoResponseModel&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddTodoResponseModel&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message)&&(identical(other.errorMsg, errorMsg) || other.errorMsg == errorMsg));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,status,message);
+int get hashCode => Object.hash(runtimeType,status,message,errorMsg);
 
 @override
 String toString() {
-  return 'AddTodoResponseModel(status: $status, message: $message)';
+  return 'AddTodoResponseModel(status: $status, message: $message, errorMsg: $errorMsg)';
 }
 
 
@@ -249,7 +251,7 @@ abstract mixin class _$AddTodoResponseModelCopyWith<$Res> implements $AddTodoRes
   factory _$AddTodoResponseModelCopyWith(_AddTodoResponseModel value, $Res Function(_AddTodoResponseModel) _then) = __$AddTodoResponseModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'status') int? status,@JsonKey(name: 'message') String? message
+@JsonKey(name: 'status') int? status,@JsonKey(name: 'message') String? message,@JsonKey(name: 'errorMsg') String? errorMsg
 });
 
 
@@ -266,10 +268,11 @@ class __$AddTodoResponseModelCopyWithImpl<$Res>
 
 /// Create a copy of AddTodoResponseModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = freezed,Object? message = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = freezed,Object? message = freezed,Object? errorMsg = freezed,}) {
   return _then(_AddTodoResponseModel(
 status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as int?,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String?,errorMsg: freezed == errorMsg ? _self.errorMsg : errorMsg // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

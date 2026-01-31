@@ -209,7 +209,6 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
 
     todoBloc.add(
       AddTodoRequested(
-        userId: "0",
         title: _titleController.text.trim(),
         description: jsonEncode(
           _quillDescController.document.toDelta().toJson(),

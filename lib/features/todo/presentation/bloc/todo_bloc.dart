@@ -19,12 +19,11 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     Emitter<TodoState> emit,
   ) async {
     print('Add Todo Requested');
-    final String userId = event.userId.trim();
     final String title = event.title.trim();
     final String description = event.description.trim();
     final String dueDate = event.dueDate.trim();
 
-    final errMsg = validate(userId, title, description, dueDate);
+    final errMsg = validate(title, description, dueDate);
 
     if (errMsg != null) {
       emit(AddTodoFailure(errorMsg: errMsg));
@@ -33,12 +32,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     emit(AddTodoLoading('Loading...'));
 
     final result = await _addTodoUseCase.call(
-      AddTodoParams(
-        userId: userId,
-        title: title,
-        description: description,
-        dueDate: dueDate,
-      ),
+      AddTodoParams(title: title, description: description, dueDate: dueDate),
     );
 
     if (kDebugMode) {
@@ -51,16 +45,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     );
   }
 
-  String? validate(
-    String userId,
-    String title,
-    String description,
-    String dueDate,
-  ) {
-    if (userId.isEmpty) {
-      return 'User Id is required';
-    }
-
+  String? validate(String title, String description, String dueDate) {
     if (title.isEmpty) {
       return 'Title cannot be empty';
     }

@@ -1,9 +1,8 @@
+import 'package:auth_app/core/network/auth_storage/secure_token_storage.dart';
 import 'package:auth_app/core/network/intercepted_http_client.dart';
 import 'package:auth_app/core/network/interceptors/auth_interceptor.dart';
 import 'package:auth_app/core/network/network_services_api.dart';
-import 'package:auth_app/core/network/secure_token_storage.dart';
-import 'package:auth_app/core/network/token_storage.dart';
-import 'package:auth_app/core/storage/secure_storage.dart';
+import 'package:auth_app/core/network/user_storage/user_storage_impl.dart';
 import 'package:auth_app/core/utils/validations.dart';
 import 'package:auth_app/features/auth/login/data/datasources/login_remote_data_source.dart';
 import 'package:auth_app/features/auth/login/data/datasources/login_remote_data_source_impl.dart';
@@ -28,7 +27,10 @@ import '../../features/auth/login/data/repositories/login_repository_impl.dart';
 import '../../features/auth/login/presentation/bloc/login_bloc.dart';
 import '../../features/todo/data/datasources/todo_remote_datasource_impl.dart';
 import '../../features/todo/domain/repositories/todo_repository.dart';
+import '../network/auth_storage/token_storage.dart';
+import '../network/user_storage/user_storage.dart';
 import '../startup/app_startup.dart';
+import '../storage/secure_storage.dart';
 import '../storage/secure_storage_impl.dart';
 
 final sl = GetIt.instance;
@@ -39,8 +41,9 @@ Future<void> init() async {
     () => SecureStorageImpl(const FlutterSecureStorage()),
   );
 
-  // Register Token Storage
+  // Register Storage
   sl.registerLazySingleton<TokenStorage>(() => SecureTokenStorage(sl()));
+  sl.registerLazySingleton<UserStorage>(() => UserStorageImpl(sl()));
 
   // Register Network Layer
   sl.registerLazySingleton<NetworkServicesApi>(
@@ -60,13 +63,17 @@ Future<void> init() async {
 
   // Repositories
   sl.registerLazySingleton<LoginRepository>(
-    () => LoginRepositoryImpl(sl<LoginRemoteDataSource>(), sl<TokenStorage>()),
+    () => LoginRepositoryImpl(
+      sl<LoginRemoteDataSource>(),
+      sl<TokenStorage>(),
+      sl<UserStorage>(),
+    ),
   );
   sl.registerLazySingleton<RegisterRepository>(
     () => RegisterRepositoryImpl(sl<RegisterRemoteDataSource>()),
   );
   sl.registerLazySingleton<TodoRepository>(
-    () => TodoRepositoryImpl(sl<TodoRemoteDatasource>()),
+    () => TodoRepositoryImpl(sl<TodoRemoteDatasource>(), sl<UserStorage>()),
   );
 
   // Use Cases

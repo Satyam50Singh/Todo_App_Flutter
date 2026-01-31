@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LoginResponseModel {
 
-@JsonKey(name: 'id') int get id;@JsonKey(name: 'Username') String get username;@JsonKey(name: 'Email') String get email;@JsonKey(name: 'FirstName') String get firstName;@JsonKey(name: 'LastName') String get lastName;@JsonKey(name: 'Gender') String get gender;@JsonKey(name: 'Image') String get image;@JsonKey(name: 'AccessToken') String get accessToken;@JsonKey(name: 'RefreshToken') String get refreshToken;
+@JsonKey(name: 'UserId') int get id;@JsonKey(name: 'Username') String get username;@JsonKey(name: 'Email') String get email;@JsonKey(name: 'FirstName') String get firstName;@JsonKey(name: 'LastName') String get lastName;@JsonKey(name: 'Gender') String get gender;@JsonKey(name: 'Image') String get image;@JsonKey(name: 'AccessToken') String get accessToken;@JsonKey(name: 'RefreshToken') String get refreshToken;
 /// Create a copy of LoginResponseModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $LoginResponseModelCopyWith<$Res>  {
   factory $LoginResponseModelCopyWith(LoginResponseModel value, $Res Function(LoginResponseModel) _then) = _$LoginResponseModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id') int id,@JsonKey(name: 'Username') String username,@JsonKey(name: 'Email') String email,@JsonKey(name: 'FirstName') String firstName,@JsonKey(name: 'LastName') String lastName,@JsonKey(name: 'Gender') String gender,@JsonKey(name: 'Image') String image,@JsonKey(name: 'AccessToken') String accessToken,@JsonKey(name: 'RefreshToken') String refreshToken
+@JsonKey(name: 'UserId') int id,@JsonKey(name: 'Username') String username,@JsonKey(name: 'Email') String email,@JsonKey(name: 'FirstName') String firstName,@JsonKey(name: 'LastName') String lastName,@JsonKey(name: 'Gender') String gender,@JsonKey(name: 'Image') String image,@JsonKey(name: 'AccessToken') String accessToken,@JsonKey(name: 'RefreshToken') String refreshToken
 });
 
 
@@ -161,7 +161,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'Username')  String username, @JsonKey(name: 'Email')  String email, @JsonKey(name: 'FirstName')  String firstName, @JsonKey(name: 'LastName')  String lastName, @JsonKey(name: 'Gender')  String gender, @JsonKey(name: 'Image')  String image, @JsonKey(name: 'AccessToken')  String accessToken, @JsonKey(name: 'RefreshToken')  String refreshToken)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'UserId')  int id, @JsonKey(name: 'Username')  String username, @JsonKey(name: 'Email')  String email, @JsonKey(name: 'FirstName')  String firstName, @JsonKey(name: 'LastName')  String lastName, @JsonKey(name: 'Gender')  String gender, @JsonKey(name: 'Image')  String image, @JsonKey(name: 'AccessToken')  String accessToken, @JsonKey(name: 'RefreshToken')  String refreshToken)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LoginResponseModel() when $default != null:
 return $default(_that.id,_that.username,_that.email,_that.firstName,_that.lastName,_that.gender,_that.image,_that.accessToken,_that.refreshToken);case _:
@@ -182,7 +182,7 @@ return $default(_that.id,_that.username,_that.email,_that.firstName,_that.lastNa
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'Username')  String username, @JsonKey(name: 'Email')  String email, @JsonKey(name: 'FirstName')  String firstName, @JsonKey(name: 'LastName')  String lastName, @JsonKey(name: 'Gender')  String gender, @JsonKey(name: 'Image')  String image, @JsonKey(name: 'AccessToken')  String accessToken, @JsonKey(name: 'RefreshToken')  String refreshToken)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'UserId')  int id, @JsonKey(name: 'Username')  String username, @JsonKey(name: 'Email')  String email, @JsonKey(name: 'FirstName')  String firstName, @JsonKey(name: 'LastName')  String lastName, @JsonKey(name: 'Gender')  String gender, @JsonKey(name: 'Image')  String image, @JsonKey(name: 'AccessToken')  String accessToken, @JsonKey(name: 'RefreshToken')  String refreshToken)  $default,) {final _that = this;
 switch (_that) {
 case _LoginResponseModel():
 return $default(_that.id,_that.username,_that.email,_that.firstName,_that.lastName,_that.gender,_that.image,_that.accessToken,_that.refreshToken);case _:
@@ -202,7 +202,7 @@ return $default(_that.id,_that.username,_that.email,_that.firstName,_that.lastNa
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'Username')  String username, @JsonKey(name: 'Email')  String email, @JsonKey(name: 'FirstName')  String firstName, @JsonKey(name: 'LastName')  String lastName, @JsonKey(name: 'Gender')  String gender, @JsonKey(name: 'Image')  String image, @JsonKey(name: 'AccessToken')  String accessToken, @JsonKey(name: 'RefreshToken')  String refreshToken)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'UserId')  int id, @JsonKey(name: 'Username')  String username, @JsonKey(name: 'Email')  String email, @JsonKey(name: 'FirstName')  String firstName, @JsonKey(name: 'LastName')  String lastName, @JsonKey(name: 'Gender')  String gender, @JsonKey(name: 'Image')  String image, @JsonKey(name: 'AccessToken')  String accessToken, @JsonKey(name: 'RefreshToken')  String refreshToken)?  $default,) {final _that = this;
 switch (_that) {
 case _LoginResponseModel() when $default != null:
 return $default(_that.id,_that.username,_that.email,_that.firstName,_that.lastName,_that.gender,_that.image,_that.accessToken,_that.refreshToken);case _:
@@ -217,10 +217,10 @@ return $default(_that.id,_that.username,_that.email,_that.firstName,_that.lastNa
 @JsonSerializable()
 
 class _LoginResponseModel implements LoginResponseModel {
-  const _LoginResponseModel({@JsonKey(name: 'id') this.id = -1, @JsonKey(name: 'Username') this.username = '', @JsonKey(name: 'Email') this.email = '', @JsonKey(name: 'FirstName') this.firstName = '', @JsonKey(name: 'LastName') this.lastName = '', @JsonKey(name: 'Gender') this.gender = '', @JsonKey(name: 'Image') this.image = '', @JsonKey(name: 'AccessToken') this.accessToken = '', @JsonKey(name: 'RefreshToken') this.refreshToken = ''});
+  const _LoginResponseModel({@JsonKey(name: 'UserId') this.id = -1, @JsonKey(name: 'Username') this.username = '', @JsonKey(name: 'Email') this.email = '', @JsonKey(name: 'FirstName') this.firstName = '', @JsonKey(name: 'LastName') this.lastName = '', @JsonKey(name: 'Gender') this.gender = '', @JsonKey(name: 'Image') this.image = '', @JsonKey(name: 'AccessToken') this.accessToken = '', @JsonKey(name: 'RefreshToken') this.refreshToken = ''});
   factory _LoginResponseModel.fromJson(Map<String, dynamic> json) => _$LoginResponseModelFromJson(json);
 
-@override@JsonKey(name: 'id') final  int id;
+@override@JsonKey(name: 'UserId') final  int id;
 @override@JsonKey(name: 'Username') final  String username;
 @override@JsonKey(name: 'Email') final  String email;
 @override@JsonKey(name: 'FirstName') final  String firstName;
@@ -263,7 +263,7 @@ abstract mixin class _$LoginResponseModelCopyWith<$Res> implements $LoginRespons
   factory _$LoginResponseModelCopyWith(_LoginResponseModel value, $Res Function(_LoginResponseModel) _then) = __$LoginResponseModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id') int id,@JsonKey(name: 'Username') String username,@JsonKey(name: 'Email') String email,@JsonKey(name: 'FirstName') String firstName,@JsonKey(name: 'LastName') String lastName,@JsonKey(name: 'Gender') String gender,@JsonKey(name: 'Image') String image,@JsonKey(name: 'AccessToken') String accessToken,@JsonKey(name: 'RefreshToken') String refreshToken
+@JsonKey(name: 'UserId') int id,@JsonKey(name: 'Username') String username,@JsonKey(name: 'Email') String email,@JsonKey(name: 'FirstName') String firstName,@JsonKey(name: 'LastName') String lastName,@JsonKey(name: 'Gender') String gender,@JsonKey(name: 'Image') String image,@JsonKey(name: 'AccessToken') String accessToken,@JsonKey(name: 'RefreshToken') String refreshToken
 });
 
 

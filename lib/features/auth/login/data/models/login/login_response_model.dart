@@ -6,7 +6,7 @@ part 'login_response_model.g.dart';
 @freezed
 abstract class LoginResponseModel with _$LoginResponseModel {
   const factory LoginResponseModel({
-    @JsonKey(name: 'id') @Default(-1) int id,
+    @JsonKey(name: 'UserId') @Default(-1) int id,
     @JsonKey(name: 'Username') @Default('') String username,
     @JsonKey(name: 'Email') @Default('') String email,
     @JsonKey(name: 'FirstName') @Default('') String firstName,

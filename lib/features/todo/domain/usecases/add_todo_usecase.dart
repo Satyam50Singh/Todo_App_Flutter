@@ -14,7 +14,6 @@ class AddTodoUseCase implements BaseUseCase<AddTodoEntity, AddTodoParams> {
   @override
   Future<Either<Failure, AddTodoEntity>> call(AddTodoParams params) {
     return _todoRepository.addTodo(
-      userId: params.userId,
       title: params.title,
       description: params.description,
       dueDate: params.dueDate,

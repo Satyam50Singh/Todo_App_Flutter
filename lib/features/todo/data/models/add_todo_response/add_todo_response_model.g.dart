@@ -11,8 +11,13 @@ _AddTodoResponseModel _$AddTodoResponseModelFromJson(
 ) => _AddTodoResponseModel(
   status: (json['status'] as num?)?.toInt(),
   message: json['message'] as String?,
+  errorMsg: json['errorMsg'] as String?,
 );
 
 Map<String, dynamic> _$AddTodoResponseModelToJson(
   _AddTodoResponseModel instance,
-) => <String, dynamic>{'status': instance.status, 'message': instance.message};
+) => <String, dynamic>{
+  'status': instance.status,
+  'message': instance.message,
+  'errorMsg': instance.errorMsg,
+};

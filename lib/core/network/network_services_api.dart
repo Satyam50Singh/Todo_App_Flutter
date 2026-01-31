@@ -3,10 +3,10 @@ import 'dart:convert';
 
 import 'package:auth_app/core/network/base_api_services.dart';
 import 'package:auth_app/core/network/network_constants.dart';
-import 'package:auth_app/core/network/token_storage.dart';
 import 'package:http/http.dart' as http;
 
 import '../error/exceptions.dart';
+import 'auth_storage/token_storage.dart';
 import 'intercepted_http_client.dart';
 
 class NetworkServicesApi implements BaseApiServices {
