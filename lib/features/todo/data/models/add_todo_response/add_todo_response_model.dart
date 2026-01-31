@@ -6,9 +6,9 @@ part 'add_todo_response_model.g.dart';
 @freezed
 abstract class AddTodoResponseModel with _$AddTodoResponseModel {
   const factory AddTodoResponseModel({
-    @JsonKey(name: 'status') int? status,
-    @JsonKey(name: 'message') String? message,
-    @JsonKey(name: 'errorMsg') String? errorMsg,
+    @JsonKey(name: 'Status') int? status,
+    @JsonKey(name: 'Message') String? message,
+    @JsonKey(name: 'ErrorMsg') String? errorMsg,
   }) = _AddTodoResponseModel;
 
   factory AddTodoResponseModel.fromJson(Map<String, dynamic> json) =>

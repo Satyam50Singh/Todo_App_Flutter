@@ -54,9 +54,9 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       return 'Description cannot be empty';
     }
 
-    if (dueDate.isEmpty) {
-      return 'Due date cannot be empty';
-    }
+    // if (dueDate.isEmpty) {
+    //   return 'Due date cannot be empty';
+    // }
     return null;
   }
 }

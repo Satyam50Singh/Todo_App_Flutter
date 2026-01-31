@@ -41,11 +41,6 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
       body: BlocConsumer<TodoBloc, TodoState>(
         listener: (context, state) {
           if (state is AddTodoFailure) {
-            _titleController.clear();
-            _quillDescController.clear();
-            _dateController.clear();
-            setState(() => isDueDateRequired = false);
-
             CustomSnackBar.showCustomSnackBar(
               context,
               false,
@@ -54,6 +49,11 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
           }
 
           if (state is AddTodoSuccess) {
+            _titleController.clear();
+            _quillDescController.clear();
+            _dateController.clear();
+            setState(() => isDueDateRequired = false);
+
             CustomSnackBar.showCustomSnackBar(
               context,
               true,

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:auth_app/core/network/base_api_services.dart';
 import 'package:auth_app/core/network/network_constants.dart';
+import 'package:auth_app/core/utils/date_utils.dart';
 import 'package:auth_app/features/todo/data/datasources/todo_remote_datasource.dart';
 import 'package:auth_app/features/todo/data/models/add_todo_response/add_todo_response_model.dart';
 
@@ -19,13 +20,19 @@ class TodoRemoteDatasourceImpl implements TodoRemoteDatasource {
     String description,
     String dueDate,
   ) async {
+    String? formattedDate;
+
+    if (dueDate.isNotEmpty) {
+      formattedDate = DateUtils.formatDate(dueDate);
+    }
+
     final response = await _apiServices.postApi(
       NetworkConstants.addTodo,
       jsonEncode({
         Constants.userId: userId,
         Constants.title: title,
         Constants.description: description,
-        Constants.dueDate: dueDate,
+        Constants.dueDate: formattedDate ?? '',
       }),
       NetworkConstants.baseTodoWebApiUrl,
     );

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AddTodoResponseModel {
 
-@JsonKey(name: 'status') int? get status;@JsonKey(name: 'message') String? get message;@JsonKey(name: 'errorMsg') String? get errorMsg;
+@JsonKey(name: 'Status') int? get status;@JsonKey(name: 'Message') String? get message;@JsonKey(name: 'ErrorMsg') String? get errorMsg;
 /// Create a copy of AddTodoResponseModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $AddTodoResponseModelCopyWith<$Res>  {
   factory $AddTodoResponseModelCopyWith(AddTodoResponseModel value, $Res Function(AddTodoResponseModel) _then) = _$AddTodoResponseModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'status') int? status,@JsonKey(name: 'message') String? message,@JsonKey(name: 'errorMsg') String? errorMsg
+@JsonKey(name: 'Status') int? status,@JsonKey(name: 'Message') String? message,@JsonKey(name: 'ErrorMsg') String? errorMsg
 });
 
 
@@ -155,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'status')  int? status, @JsonKey(name: 'message')  String? message, @JsonKey(name: 'errorMsg')  String? errorMsg)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'Status')  int? status, @JsonKey(name: 'Message')  String? message, @JsonKey(name: 'ErrorMsg')  String? errorMsg)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AddTodoResponseModel() when $default != null:
 return $default(_that.status,_that.message,_that.errorMsg);case _:
@@ -176,7 +176,7 @@ return $default(_that.status,_that.message,_that.errorMsg);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'status')  int? status, @JsonKey(name: 'message')  String? message, @JsonKey(name: 'errorMsg')  String? errorMsg)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'Status')  int? status, @JsonKey(name: 'Message')  String? message, @JsonKey(name: 'ErrorMsg')  String? errorMsg)  $default,) {final _that = this;
 switch (_that) {
 case _AddTodoResponseModel():
 return $default(_that.status,_that.message,_that.errorMsg);case _:
@@ -196,7 +196,7 @@ return $default(_that.status,_that.message,_that.errorMsg);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'status')  int? status, @JsonKey(name: 'message')  String? message, @JsonKey(name: 'errorMsg')  String? errorMsg)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'Status')  int? status, @JsonKey(name: 'Message')  String? message, @JsonKey(name: 'ErrorMsg')  String? errorMsg)?  $default,) {final _that = this;
 switch (_that) {
 case _AddTodoResponseModel() when $default != null:
 return $default(_that.status,_that.message,_that.errorMsg);case _:
@@ -211,12 +211,12 @@ return $default(_that.status,_that.message,_that.errorMsg);case _:
 @JsonSerializable()
 
 class _AddTodoResponseModel implements AddTodoResponseModel {
-  const _AddTodoResponseModel({@JsonKey(name: 'status') this.status, @JsonKey(name: 'message') this.message, @JsonKey(name: 'errorMsg') this.errorMsg});
+  const _AddTodoResponseModel({@JsonKey(name: 'Status') this.status, @JsonKey(name: 'Message') this.message, @JsonKey(name: 'ErrorMsg') this.errorMsg});
   factory _AddTodoResponseModel.fromJson(Map<String, dynamic> json) => _$AddTodoResponseModelFromJson(json);
 
-@override@JsonKey(name: 'status') final  int? status;
-@override@JsonKey(name: 'message') final  String? message;
-@override@JsonKey(name: 'errorMsg') final  String? errorMsg;
+@override@JsonKey(name: 'Status') final  int? status;
+@override@JsonKey(name: 'Message') final  String? message;
+@override@JsonKey(name: 'ErrorMsg') final  String? errorMsg;
 
 /// Create a copy of AddTodoResponseModel
 /// with the given fields replaced by the non-null parameter values.
@@ -251,7 +251,7 @@ abstract mixin class _$AddTodoResponseModelCopyWith<$Res> implements $AddTodoRes
   factory _$AddTodoResponseModelCopyWith(_AddTodoResponseModel value, $Res Function(_AddTodoResponseModel) _then) = __$AddTodoResponseModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'status') int? status,@JsonKey(name: 'message') String? message,@JsonKey(name: 'errorMsg') String? errorMsg
+@JsonKey(name: 'Status') int? status,@JsonKey(name: 'Message') String? message,@JsonKey(name: 'ErrorMsg') String? errorMsg
 });
 
 

@@ -79,7 +79,9 @@ class NetworkServicesApi implements BaseApiServices {
         ? jsonDecode(response.body)
         : null;
 
-    final message = decodedBody is Map && decodedBody['message'] != null
+    var message = decodedBody is Map && decodedBody['ErrorMsg'] != null
+        ? decodedBody['ErrorMsg']
+        : decodedBody is Map && decodedBody['message'] != null
         ? decodedBody['message']
         : 'Something went wrong';
 

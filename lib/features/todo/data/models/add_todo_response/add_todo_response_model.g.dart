@@ -9,15 +9,15 @@ part of 'add_todo_response_model.dart';
 _AddTodoResponseModel _$AddTodoResponseModelFromJson(
   Map<String, dynamic> json,
 ) => _AddTodoResponseModel(
-  status: (json['status'] as num?)?.toInt(),
-  message: json['message'] as String?,
-  errorMsg: json['errorMsg'] as String?,
+  status: (json['Status'] as num?)?.toInt(),
+  message: json['Message'] as String?,
+  errorMsg: json['ErrorMsg'] as String?,
 );
 
 Map<String, dynamic> _$AddTodoResponseModelToJson(
   _AddTodoResponseModel instance,
 ) => <String, dynamic>{
-  'status': instance.status,
-  'message': instance.message,
-  'errorMsg': instance.errorMsg,
+  'Status': instance.status,
+  'Message': instance.message,
+  'ErrorMsg': instance.errorMsg,
 };
