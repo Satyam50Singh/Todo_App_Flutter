@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../core/theme/pallete.dart';
+import '../theme/pallete.dart';
 
 class GradientButton extends StatelessWidget {
+  final String buttonText;
   final VoidCallback onPressed;
 
-  const GradientButton({super.key, required this.onPressed});
+  const GradientButton({
+    super.key,
+    required this.buttonText,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +31,8 @@ class GradientButton extends StatelessWidget {
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
         ),
-        child: const Text(
-          'Sign in',
+        child: Text(
+          buttonText,
           style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17),
         ),
       ),

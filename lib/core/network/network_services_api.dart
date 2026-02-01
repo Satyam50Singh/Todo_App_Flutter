@@ -3,10 +3,10 @@ import 'dart:convert';
 
 import 'package:auth_app/core/network/base_api_services.dart';
 import 'package:auth_app/core/network/network_constants.dart';
-import 'package:auth_app/core/network/token_storage.dart';
 import 'package:http/http.dart' as http;
 
 import '../error/exceptions.dart';
+import 'auth_storage/token_storage.dart';
 import 'intercepted_http_client.dart';
 
 class NetworkServicesApi implements BaseApiServices {
@@ -28,7 +28,10 @@ class NetworkServicesApi implements BaseApiServices {
             },
           )
           .timeout(const Duration(seconds: 50));
+
       jsonResponse = await handleResponse(response);
+    } on TimeoutException {
+      throw RequestTimeout();
     } on Failure {
       rethrow;
     } catch (e) {
@@ -39,10 +42,11 @@ class NetworkServicesApi implements BaseApiServices {
   }
 
   @override
-  Future<dynamic> postApi(String path, var payload) async {
+  Future<dynamic> postApi(String path, var payload, String baseUrl) async {
     dynamic jsonResponse;
 
-    final url = Uri.parse('${NetworkConstants.baseUrl}$path');
+    String finalUrl = '$baseUrl$path';
+    final url = Uri.parse(finalUrl);
 
     try {
       final request = http.Request('POST', url);
@@ -59,6 +63,8 @@ class NetworkServicesApi implements BaseApiServices {
           .timeout(const Duration(seconds: NetworkConstants.timeout));
 
       jsonResponse = await handleResponse(response);
+    } on TimeoutException {
+      throw RequestTimeout();
     } on Failure {
       rethrow;
     } catch (e) {
@@ -73,7 +79,9 @@ class NetworkServicesApi implements BaseApiServices {
         ? jsonDecode(response.body)
         : null;
 
-    final message = decodedBody is Map && decodedBody['message'] != null
+    var message = decodedBody is Map && decodedBody['ErrorMsg'] != null
+        ? decodedBody['ErrorMsg']
+        : decodedBody is Map && decodedBody['message'] != null
         ? decodedBody['message']
         : 'Something went wrong';
 

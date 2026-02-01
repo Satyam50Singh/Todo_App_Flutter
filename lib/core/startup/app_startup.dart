@@ -1,5 +1,6 @@
-import 'package:auth_app/core/network/token_storage.dart';
 import 'package:flutter/material.dart';
+
+import '../network/auth_storage/token_storage.dart';
 
 class AppStartup {
   final TokenStorage _tokenStorage;

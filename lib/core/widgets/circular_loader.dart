@@ -7,9 +7,9 @@ class CircularLoader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned.fill(
       child: AbsorbPointer(
-        absorbing: true,
         child: Container(
           color: Colors.black.withOpacity(0.5),
+          alignment: Alignment.center,
           child: Center(child: CircularProgressIndicator()),
         ),
       ),

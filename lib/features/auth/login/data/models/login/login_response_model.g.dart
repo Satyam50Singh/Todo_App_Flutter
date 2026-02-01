@@ -8,26 +8,26 @@ part of 'login_response_model.dart';
 
 _LoginResponseModel _$LoginResponseModelFromJson(Map<String, dynamic> json) =>
     _LoginResponseModel(
-      id: (json['id'] as num?)?.toInt() ?? -1,
-      username: json['username'] as String? ?? '',
-      email: json['email'] as String? ?? '',
-      firstName: json['firstName'] as String? ?? '',
-      lastName: json['lastName'] as String? ?? '',
-      gender: json['gender'] as String? ?? '',
-      image: json['image'] as String? ?? '',
-      accessToken: json['accessToken'] as String? ?? '',
-      refreshToken: json['refreshToken'] as String? ?? '',
+      id: (json['UserId'] as num?)?.toInt() ?? -1,
+      username: json['Username'] as String? ?? '',
+      email: json['Email'] as String? ?? '',
+      firstName: json['FirstName'] as String? ?? '',
+      lastName: json['LastName'] as String? ?? '',
+      gender: json['Gender'] as String? ?? '',
+      image: json['Image'] as String? ?? '',
+      accessToken: json['AccessToken'] as String? ?? '',
+      refreshToken: json['RefreshToken'] as String? ?? '',
     );
 
 Map<String, dynamic> _$LoginResponseModelToJson(_LoginResponseModel instance) =>
     <String, dynamic>{
-      'id': instance.id,
-      'username': instance.username,
-      'email': instance.email,
-      'firstName': instance.firstName,
-      'lastName': instance.lastName,
-      'gender': instance.gender,
-      'image': instance.image,
-      'accessToken': instance.accessToken,
-      'refreshToken': instance.refreshToken,
+      'UserId': instance.id,
+      'Username': instance.username,
+      'Email': instance.email,
+      'FirstName': instance.firstName,
+      'LastName': instance.lastName,
+      'Gender': instance.gender,
+      'Image': instance.image,
+      'AccessToken': instance.accessToken,
+      'RefreshToken': instance.refreshToken,
     };

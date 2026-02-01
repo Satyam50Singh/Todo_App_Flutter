@@ -1,4 +1,4 @@
-import 'package:auth_app/core/network/token_storage.dart';
+import 'package:auth_app/core/network/auth_storage/token_storage.dart';
 import 'package:auth_app/core/storage/StorageKeys.dart';
 import 'package:auth_app/core/storage/secure_storage.dart';
 
@@ -14,7 +14,6 @@ class SecureTokenStorage implements TokenStorage {
 
   @override
   Future<String?> getRefreshToken() {
-    // TODO: implement getRefreshToken
     return _secureStorage.read(StorageKeys.refreshToken);
   }
 

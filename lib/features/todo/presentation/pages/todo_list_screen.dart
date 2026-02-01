@@ -3,7 +3,7 @@ import 'package:auth_app/core/routes/app_routes.dart';
 import 'package:auth_app/core/utils/snackbar_utils.dart';
 import 'package:auth_app/core/utils/utils.dart';
 import 'package:auth_app/core/widgets/circular_loader.dart';
-import 'package:auth_app/features/auth/login/presentation/bloc/auth_bloc.dart';
+import 'package:auth_app/features/auth/login/presentation/bloc/login_bloc.dart';
 import 'package:auth_app/features/todo/presentation/widgets/todo_list_widgets/empty_todo_state.dart';
 import 'package:auth_app/features/todo/presentation/widgets/todo_list_widgets/todo_list_app_bar.dart';
 import 'package:auth_app/features/todo/presentation/widgets/todo_list_widgets/todo_list_tile.dart';
@@ -23,22 +23,30 @@ class TodoListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authState = context.watch<AuthBloc>().state;
+    final authState = context.watch<LoginBloc>().state;
 
-    return BlocListener<AuthBloc, AuthState>(
+    return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
-        if (state is AuthInitial) {
+        if (state is LogoutSuccess) {
           Navigator.pushNamedAndRemoveUntil(
             context,
             RouteName.loginScreen,
             (route) => false,
           );
         }
+
+        if (state is LogoutFailure) {
+          CustomSnackBar.showCustomSnackBar(
+            context,
+            false,
+            state.errorMessage ?? 'Logout Failed!',
+          );
+        }
       },
       child: Scaffold(
         appBar: TodoListAppBar(
           onPressed: () {
-            context.read<AuthBloc>().add(AuthLogoutRequested());
+            context.read<LoginBloc>().add(AuthLogoutRequested());
           },
         ),
         floatingActionButton: FloatingActionButton(
@@ -72,7 +80,7 @@ class TodoListScreen extends StatelessWidget {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
                                 child: Slidable(
-                                  key: ValueKey(todo.name),
+                                  key: ValueKey(todo.title),
                                   endActionPane: ActionPane(
                                     motion: const DrawerMotion(),
                                     extentRatio: 0.20,
@@ -131,7 +139,7 @@ class TodoListScreen extends StatelessWidget {
               ),
             ),
 
-            if (authState is AuthLoading) CircularLoader(),
+            if (authState is LoginLoading) CircularLoader(),
           ],
         ),
       ),
@@ -143,7 +151,7 @@ class TodoListScreen extends StatelessWidget {
       ClipboardData(
         text:
             '''
-        📝 ${todo.name}
+        📝 ${todo.title}
         \n📄 Description:
         \n${Utils.quillJsonToPlainText(todo.description)}
         \n📅 Due Date: ${todo.dueDate}
@@ -163,7 +171,7 @@ class TodoListScreen extends StatelessWidget {
         ShareParams(
           text:
               '''
-            📝 ${todo.name}
+            📝 ${todo.title}
             \n📄 Description:
             \n${Utils.quillJsonToPlainText(todo.description)}
             \n📅 Due Date: ${todo.dueDate}

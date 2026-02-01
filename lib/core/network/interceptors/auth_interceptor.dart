@@ -1,7 +1,8 @@
 import 'package:auth_app/core/network/interceptors/interceptor.dart';
-import 'package:auth_app/core/network/token_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+
+import '../auth_storage/token_storage.dart';
 
 class AuthInterceptor implements Interceptor {
   final TokenStorage tokenStorage;

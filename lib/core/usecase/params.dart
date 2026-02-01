@@ -2,6 +2,6 @@ abstract class Params {
   const Params();
 }
 
-abstract class NoParams {
+class NoParams {
   const NoParams();
 }
