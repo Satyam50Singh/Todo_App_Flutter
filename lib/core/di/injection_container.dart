@@ -1,3 +1,5 @@
+import 'package:auth_app/core/device/device_id_provider.dart';
+import 'package:auth_app/core/device/device_id_provider_impl.dart';
 import 'package:auth_app/core/network/auth_storage/secure_token_storage.dart';
 import 'package:auth_app/core/network/intercepted_http_client.dart';
 import 'package:auth_app/core/network/interceptors/auth_interceptor.dart';
@@ -19,9 +21,11 @@ import 'package:auth_app/features/todo/data/datasources/todo_remote_datasource.d
 import 'package:auth_app/features/todo/data/repositories/todo_repository_impl.dart';
 import 'package:auth_app/features/todo/domain/usecases/add_todo_usecase.dart';
 import 'package:auth_app/features/todo/presentation/bloc/todo_bloc.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../features/auth/login/data/repositories/login_repository_impl.dart';
 import '../../features/auth/login/presentation/bloc/login_bloc.dart';
@@ -94,7 +98,7 @@ Future<void> init() async {
   sl.registerLazySingleton<AppStartup>(() => AppStartup(sl()));
 
   sl.registerLazySingleton<AuthInterceptor>(
-    () => AuthInterceptor(sl<TokenStorage>()),
+    () => AuthInterceptor(sl<TokenStorage>(), sl<DeviceIdProvider>()),
   );
 
   sl.registerLazySingleton<InterceptedHttpClient>(
@@ -103,4 +107,14 @@ Future<void> init() async {
 
   // Validations
   sl.registerLazySingleton<IValidations>(() => Validations());
+
+  // External
+  final sharedPreferences = await SharedPreferences.getInstance();
+  sl.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
+  sl.registerLazySingleton<DeviceInfoPlugin>(() => DeviceInfoPlugin());
+
+  // Device Id Provider
+  sl.registerLazySingleton<DeviceIdProvider>(
+    () => DeviceIdProviderImpl(sl(), sl()),
+  );
 }

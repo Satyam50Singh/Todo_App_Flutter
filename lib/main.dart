@@ -1,3 +1,4 @@
+import 'package:auth_app/classes_and_packages_initialization.dart';
 import 'package:auth_app/core/bloc/app_bloc_observer.dart';
 import 'package:auth_app/core/routes/app_navigator.dart';
 import 'package:auth_app/core/routes/app_routes.dart';
@@ -20,8 +21,19 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    ClassesAndPackagesInitialization().init();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +46,6 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => sl<LoginBloc>()),
         BlocProvider(create: (_) => sl<RegisterBloc>()),
         BlocProvider(create: (_) => sl<TodoBloc>()),
-
       ],
       child: MaterialApp(
         localizationsDelegates: [FlutterQuillLocalizations.delegate],
