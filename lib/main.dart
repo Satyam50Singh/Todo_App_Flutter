@@ -1,4 +1,3 @@
-import 'package:auth_app/classes_and_packages_initialization.dart';
 import 'package:auth_app/core/bloc/app_bloc_observer.dart';
 import 'package:auth_app/core/routes/app_navigator.dart';
 import 'package:auth_app/core/routes/app_routes.dart';
@@ -18,7 +17,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = AppBlocObserver();
   await init();
-  await ClassesAndPackagesInitialization().init();
   runApp(const MyApp());
 }
 
@@ -40,7 +38,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         localizationsDelegates: [FlutterQuillLocalizations.delegate],
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'Todo Flutter App',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         ),

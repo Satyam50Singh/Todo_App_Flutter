@@ -43,6 +43,9 @@ import '../storage/secure_storage_impl.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
+  // App Startup
+  sl.registerLazySingleton<AppStartup>(() => AppStartup(sl()));
+
   // Register Secure Storage
   sl.registerLazySingleton<SecureStorage>(
     () => SecureStorageImpl(const FlutterSecureStorage()),
@@ -100,18 +103,6 @@ Future<void> init() async {
   sl.registerFactory(() => CounterBloc());
   sl.registerFactory(() => TodoCubit());
 
-
-  // App Startup
-  sl.registerLazySingleton<AppStartup>(() => AppStartup(sl()));
-
-  sl.registerLazySingleton<AuthInterceptor>(
-    () => AuthInterceptor(sl<TokenStorage>(), sl<DeviceIdProvider>()),
-  );
-
-  sl.registerLazySingleton<InterceptedHttpClient>(
-    () => InterceptedHttpClient(http.Client(), [sl<AuthInterceptor>()]),
-  );
-
   // Validations
   sl.registerLazySingleton<IValidations>(() => Validations());
 
@@ -124,4 +115,12 @@ Future<void> init() async {
   sl.registerLazySingleton<DeviceIdProvider>(
     () => DeviceIdProviderImpl(sl(), sl()),
   );
+
+  sl.registerLazySingleton<AuthInterceptor>(
+    () => AuthInterceptor(sl<TokenStorage>(), sl<DeviceIdProvider>()),
+  );
+  sl.registerLazySingleton<InterceptedHttpClient>(
+    () => InterceptedHttpClient(http.Client(), [sl<AuthInterceptor>()]),
+  );
+  await sl<DeviceIdProvider>().getDeviceId();
 }

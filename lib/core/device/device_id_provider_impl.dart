@@ -19,31 +19,26 @@ class DeviceIdProviderImpl implements DeviceIdProvider {
   Future<String> getDeviceId() async {
     if (_cachedDeviceId != null) return _cachedDeviceId!;
 
-    try {
-      String? deviceId = _prefs.getString(_key);
-      if (deviceId != null && deviceId.isNotEmpty) {
-        _cachedDeviceId = deviceId;
-        return deviceId;
-      }
-
-      if (Platform.isAndroid) {
-        final androidInfo = await _deviceInfo.androidInfo;
-        deviceId = androidInfo.id;
-      } else if (Platform.isIOS) {
-        final iosInfo = await _deviceInfo.iosInfo;
-        deviceId = iosInfo.identifierForVendor;
-      } else {
-        deviceId = 'unknown_device';
-      }
-
-      await _prefs.setString(_key, deviceId ?? '');
+    String? deviceId = _prefs.getString(_key);
+    if (deviceId != null && deviceId.isNotEmpty) {
       _cachedDeviceId = deviceId;
-
-      debugPrint('Device ID: $deviceId');
-      return deviceId ?? 'unknown_device';
-    } on Exception catch (e) {
-      debugPrint(e.toString());
-      return '';
+      return deviceId;
     }
+
+    if (Platform.isAndroid) {
+      final androidInfo = await _deviceInfo.androidInfo;
+      deviceId = androidInfo.id;
+    } else if (Platform.isIOS) {
+      final iosInfo = await _deviceInfo.iosInfo;
+      deviceId = iosInfo.identifierForVendor;
+    } else {
+      deviceId = 'unknown_device';
+    }
+
+    await _prefs.setString(_key, deviceId ?? '');
+    _cachedDeviceId = deviceId;
+
+    debugPrint('Device ID: $deviceId');
+    return deviceId ?? 'unknown_device';
   }
 }
