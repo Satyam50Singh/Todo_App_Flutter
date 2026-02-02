@@ -18,31 +18,21 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = AppBlocObserver();
   await init();
+  await ClassesAndPackagesInitialization().init();
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-    ClassesAndPackagesInitialization().init();
-  }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       // MultiBlocProvider is used to provide multiple Blocs to the app
       providers: [
-        BlocProvider(create: (_) => CounterCubit()),
-        BlocProvider(create: (_) => CounterBloc()),
-        BlocProvider(create: (_) => TodoCubit()),
+        BlocProvider(create: (_) => sl<CounterCubit>()),
+        BlocProvider(create: (_) => sl<CounterBloc>()),
+        BlocProvider(create: (_) => sl<TodoCubit>()),
         BlocProvider(create: (_) => sl<LoginBloc>()),
         BlocProvider(create: (_) => sl<RegisterBloc>()),
         BlocProvider(create: (_) => sl<TodoBloc>()),
@@ -51,7 +41,9 @@ class _MyAppState extends State<MyApp> {
         localizationsDelegates: [FlutterQuillLocalizations.delegate],
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
-        theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        ),
         initialRoute: RouteName.splashScreen,
         onGenerateRoute: AppNavigator.onGenerateRoute,
       ),

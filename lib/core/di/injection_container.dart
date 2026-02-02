@@ -29,8 +29,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../features/auth/login/data/repositories/login_repository_impl.dart';
 import '../../features/auth/login/presentation/bloc/login_bloc.dart';
+import '../../features/home/presentation/bloc/counter_bloc.dart';
+import '../../features/home/presentation/cubit/counter_cubit.dart';
 import '../../features/todo/data/datasources/todo_remote_datasource_impl.dart';
 import '../../features/todo/domain/repositories/todo_repository.dart';
+import '../../features/todo/presentation/cubit/todo_cubit.dart';
 import '../network/auth_storage/token_storage.dart';
 import '../network/user_storage/user_storage.dart';
 import '../startup/app_startup.dart';
@@ -86,13 +89,17 @@ Future<void> init() async {
   sl.registerLazySingleton<LogoutUseCase>(() => LogoutUseCase(sl()));
   sl.registerLazySingleton<AddTodoUseCase>(() => AddTodoUseCase(sl()));
 
-  // Bloc must be factory, not singleton
+  // Bloc & Cubit must be factory, not singleton
   sl.registerFactory(
     () =>
         LoginBloc(sl<LoginUseCase>(), sl<LogoutUseCase>(), sl<IValidations>()),
   );
   sl.registerFactory(() => RegisterBloc(sl<RegisterUseCase>()));
   sl.registerFactory(() => TodoBloc(sl<AddTodoUseCase>()));
+  sl.registerFactory(() => CounterCubit());
+  sl.registerFactory(() => CounterBloc());
+  sl.registerFactory(() => TodoCubit());
+
 
   // App Startup
   sl.registerLazySingleton<AppStartup>(() => AppStartup(sl()));
