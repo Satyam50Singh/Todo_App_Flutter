@@ -1,3 +1,5 @@
+import 'package:auth_app/core/device/device_id_provider.dart';
+import 'package:auth_app/core/device/device_id_provider_impl.dart';
 import 'package:auth_app/core/network/auth_storage/secure_token_storage.dart';
 import 'package:auth_app/core/network/intercepted_http_client.dart';
 import 'package:auth_app/core/network/interceptors/auth_interceptor.dart';
@@ -19,14 +21,19 @@ import 'package:auth_app/features/todo/data/datasources/todo_remote_datasource.d
 import 'package:auth_app/features/todo/data/repositories/todo_repository_impl.dart';
 import 'package:auth_app/features/todo/domain/usecases/add_todo_usecase.dart';
 import 'package:auth_app/features/todo/presentation/bloc/todo_bloc.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../features/auth/login/data/repositories/login_repository_impl.dart';
 import '../../features/auth/login/presentation/bloc/login_bloc.dart';
+import '../../features/home/presentation/bloc/counter_bloc.dart';
+import '../../features/home/presentation/cubit/counter_cubit.dart';
 import '../../features/todo/data/datasources/todo_remote_datasource_impl.dart';
 import '../../features/todo/domain/repositories/todo_repository.dart';
+import '../../features/todo/presentation/cubit/todo_cubit.dart';
 import '../network/auth_storage/token_storage.dart';
 import '../network/user_storage/user_storage.dart';
 import '../startup/app_startup.dart';
@@ -36,6 +43,9 @@ import '../storage/secure_storage_impl.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
+  // App Startup
+  sl.registerLazySingleton<AppStartup>(() => AppStartup(sl()));
+
   // Register Secure Storage
   sl.registerLazySingleton<SecureStorage>(
     () => SecureStorageImpl(const FlutterSecureStorage()),
@@ -82,25 +92,35 @@ Future<void> init() async {
   sl.registerLazySingleton<LogoutUseCase>(() => LogoutUseCase(sl()));
   sl.registerLazySingleton<AddTodoUseCase>(() => AddTodoUseCase(sl()));
 
-  // Bloc must be factory, not singleton
+  // Bloc & Cubit must be factory, not singleton
   sl.registerFactory(
     () =>
         LoginBloc(sl<LoginUseCase>(), sl<LogoutUseCase>(), sl<IValidations>()),
   );
   sl.registerFactory(() => RegisterBloc(sl<RegisterUseCase>()));
   sl.registerFactory(() => TodoBloc(sl<AddTodoUseCase>()));
-
-  // App Startup
-  sl.registerLazySingleton<AppStartup>(() => AppStartup(sl()));
-
-  sl.registerLazySingleton<AuthInterceptor>(
-    () => AuthInterceptor(sl<TokenStorage>()),
-  );
-
-  sl.registerLazySingleton<InterceptedHttpClient>(
-    () => InterceptedHttpClient(http.Client(), [sl<AuthInterceptor>()]),
-  );
+  sl.registerFactory(() => CounterCubit());
+  sl.registerFactory(() => CounterBloc());
+  sl.registerFactory(() => TodoCubit());
 
   // Validations
   sl.registerLazySingleton<IValidations>(() => Validations());
+
+  // External
+  final sharedPreferences = await SharedPreferences.getInstance();
+  sl.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
+  sl.registerLazySingleton<DeviceInfoPlugin>(() => DeviceInfoPlugin());
+
+  // Device Id Provider
+  sl.registerLazySingleton<DeviceIdProvider>(
+    () => DeviceIdProviderImpl(sl(), sl()),
+  );
+
+  sl.registerLazySingleton<AuthInterceptor>(
+    () => AuthInterceptor(sl<TokenStorage>(), sl<DeviceIdProvider>()),
+  );
+  sl.registerLazySingleton<InterceptedHttpClient>(
+    () => InterceptedHttpClient(http.Client(), [sl<AuthInterceptor>()]),
+  );
+  await sl<DeviceIdProvider>().getDeviceId();
 }

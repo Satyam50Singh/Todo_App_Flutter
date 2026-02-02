@@ -28,19 +28,20 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       // MultiBlocProvider is used to provide multiple Blocs to the app
       providers: [
-        BlocProvider(create: (_) => CounterCubit()),
-        BlocProvider(create: (_) => CounterBloc()),
-        BlocProvider(create: (_) => TodoCubit()),
+        BlocProvider(create: (_) => sl<CounterCubit>()),
+        BlocProvider(create: (_) => sl<CounterBloc>()),
+        BlocProvider(create: (_) => sl<TodoCubit>()),
         BlocProvider(create: (_) => sl<LoginBloc>()),
         BlocProvider(create: (_) => sl<RegisterBloc>()),
         BlocProvider(create: (_) => sl<TodoBloc>()),
-
       ],
       child: MaterialApp(
         localizationsDelegates: [FlutterQuillLocalizations.delegate],
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
+        title: 'Todo Flutter App',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        ),
         initialRoute: RouteName.splashScreen,
         onGenerateRoute: AppNavigator.onGenerateRoute,
       ),

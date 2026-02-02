@@ -1,3 +1,4 @@
+import 'package:auth_app/core/device/device_id_provider.dart';
 import 'package:auth_app/core/network/interceptors/interceptor.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -6,8 +7,9 @@ import '../auth_storage/token_storage.dart';
 
 class AuthInterceptor implements Interceptor {
   final TokenStorage tokenStorage;
+  final DeviceIdProvider _deviceIdProvider;
 
-  AuthInterceptor(this.tokenStorage);
+  AuthInterceptor(this.tokenStorage, this._deviceIdProvider);
 
   @override
   Future<http.Response> onError(error) async {
@@ -20,9 +22,16 @@ class AuthInterceptor implements Interceptor {
   @override
   Future<http.BaseRequest> onRequest(http.BaseRequest request) async {
     final token = await tokenStorage.getAccessToken();
+    final deviceId = await _deviceIdProvider.getDeviceId();
+
     if (token != null && token.isNotEmpty) {
       request.headers['Authorization'] = 'Bearer $token';
     }
+
+    request.headers['X-Device-Id'] = deviceId;
+    request.headers['Accept'] = 'application/json';
+    request.headers['Content-Type'] = 'application/json';
+
     if (kDebugMode) {
       debugPrint('METHOD: ${request.method} ${request.url}');
       debugPrint('Headers: ${request.headers}');

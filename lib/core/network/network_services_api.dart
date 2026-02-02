@@ -16,18 +16,18 @@ class NetworkServicesApi implements BaseApiServices {
   NetworkServicesApi(this.tokenStorage, this._client);
 
   @override
-  Future<dynamic> getApi(String url) async {
+  Future<dynamic> getApi(String baseUrl, String path) async {
     dynamic jsonResponse;
+
+    final finalUrl = '$baseUrl$path';
+    final url = Uri.parse(finalUrl);
+
     try {
-      final response = await http
-          .get(
-            Uri.parse(url),
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-            },
-          )
-          .timeout(const Duration(seconds: 50));
+      final request = http.Request('GET', url);
+
+      final response = await _client
+          .send(request)
+          .timeout(const Duration(seconds: NetworkConstants.timeout));
 
       jsonResponse = await handleResponse(response);
     } on TimeoutException {
@@ -50,11 +50,6 @@ class NetworkServicesApi implements BaseApiServices {
 
     try {
       final request = http.Request('POST', url);
-
-      request.headers.addAll({
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      });
 
       request.body = payload;
 
