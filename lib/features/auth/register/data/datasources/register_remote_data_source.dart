@@ -1,4 +1,4 @@
-import 'package:auth_app/features/auth/register/data/models/register/register_response_model.dart';
+import '../models/register_response_model/register_response_model.dart';
 
 abstract class RegisterRemoteDataSource {
   Future<RegisterResponseModel> register(

@@ -16,7 +16,12 @@ class NetworkServicesApi implements BaseApiServices {
   NetworkServicesApi(this.tokenStorage, this._client);
 
   @override
-  Future<dynamic> getApi(String baseUrl, String path) async {
+  Future<dynamic> getApi(
+    String baseUrl,
+    String path,
+    var payload,
+    bool isBodyPresent,
+  ) async {
     dynamic jsonResponse;
 
     final finalUrl = '$baseUrl$path';
@@ -24,6 +29,8 @@ class NetworkServicesApi implements BaseApiServices {
 
     try {
       final request = http.Request('GET', url);
+
+      if (isBodyPresent) request.body = payload;
 
       final response = await _client
           .send(request)

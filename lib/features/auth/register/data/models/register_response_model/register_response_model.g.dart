@@ -9,17 +9,19 @@ part of 'register_response_model.dart';
 _RegisterResponseModel _$RegisterResponseModelFromJson(
   Map<String, dynamic> json,
 ) => _RegisterResponseModel(
-  status: (json['status'] as num?)?.toInt(),
-  message: json['message'] as String?,
-  errorMsg: json['errorMsg'] as String?,
-  loginMessage: json['loginMessage'] as String?,
+  status: (json['Status'] as num?)?.toInt(),
+  message: json['Message'] as String?,
+  errorMsg: json['ErrorMsg'] as String?,
+  data: json['Data'] == null
+      ? null
+      : RegisterDataModel.fromJson(json['Data'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$RegisterResponseModelToJson(
   _RegisterResponseModel instance,
 ) => <String, dynamic>{
-  'status': instance.status,
-  'message': instance.message,
-  'errorMsg': instance.errorMsg,
-  'loginMessage': instance.loginMessage,
+  'Status': instance.status,
+  'Message': instance.message,
+  'ErrorMsg': instance.errorMsg,
+  'Data': instance.data,
 };

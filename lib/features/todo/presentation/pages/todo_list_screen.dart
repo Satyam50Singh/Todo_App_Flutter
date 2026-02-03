@@ -4,6 +4,8 @@ import 'package:auth_app/core/utils/snackbar_utils.dart';
 import 'package:auth_app/core/utils/utils.dart';
 import 'package:auth_app/core/widgets/circular_loader.dart';
 import 'package:auth_app/features/auth/login/presentation/bloc/login_bloc.dart';
+import 'package:auth_app/features/todo/domain/entities/todo_entity.dart';
+import 'package:auth_app/features/todo/presentation/bloc/todo_bloc.dart';
 import 'package:auth_app/features/todo/presentation/widgets/todo_list_widgets/empty_todo_state.dart';
 import 'package:auth_app/features/todo/presentation/widgets/todo_list_widgets/todo_list_app_bar.dart';
 import 'package:auth_app/features/todo/presentation/widgets/todo_list_widgets/todo_list_tile.dart';
@@ -15,34 +17,59 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../../core/theme/pallete.dart';
-import '../../data/models/todo_model.dart';
-import '../cubit/todo_cubit.dart';
 
-class TodoListScreen extends StatelessWidget {
+class TodoListScreen extends StatefulWidget {
   const TodoListScreen({super.key});
+
+  @override
+  State<TodoListScreen> createState() => _TodoListScreenState();
+}
+
+class _TodoListScreenState extends State<TodoListScreen> {
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<TodoBloc>(context).add(GetTodoListRequested());
+  }
 
   @override
   Widget build(BuildContext context) {
     final authState = context.watch<LoginBloc>().state;
 
-    return BlocListener<LoginBloc, LoginState>(
-      listener: (context, state) {
-        if (state is LogoutSuccess) {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            RouteName.loginScreen,
-            (route) => false,
-          );
-        }
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<LoginBloc, LoginState>(
+          listener: (context, state) {
+            if (state is LogoutSuccess) {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                RouteName.loginScreen,
+                (route) => false,
+              );
+            }
 
-        if (state is LogoutFailure) {
-          CustomSnackBar.showCustomSnackBar(
-            context,
-            false,
-            state.errorMessage ?? 'Logout Failed!',
-          );
-        }
-      },
+            if (state is LogoutFailure) {
+              CustomSnackBar.showCustomSnackBar(
+                context,
+                false,
+                state.errorMessage ?? 'Logout Failed!',
+              );
+            }
+          },
+        ),
+
+        BlocListener<TodoBloc, TodoState>(
+          listener: (context, state) {
+            if (state is GetTodoListFailure) {
+              CustomSnackBar.showCustomSnackBar(
+                context,
+                false,
+                state.errorMsg ?? 'Failed to load todos',
+              );
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         appBar: TodoListAppBar(
           onPressed: () {
@@ -52,26 +79,40 @@ class TodoListScreen extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Pallete.gradient1,
           onPressed: () {
-            Navigator.pushNamed(context, RouteName.addTodoScreen);
+            Navigator.pushNamed(context, RouteName.addTodoScreen).then(
+              (value) => {
+                if (value == true)
+                  context.read<TodoBloc>().add(GetTodoListRequested()),
+              },
+            );
           },
           tooltip: "Add Todo",
           child: Icon(Icons.add, color: Colors.white),
         ),
         body: Stack(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-              child: BlocBuilder<TodoCubit, List<TodoModel>>(
-                builder: (context, todos) {
-                  // If there are todos, show them
-                  if (todos.isNotEmpty) {
-                    return Builder(
+            BlocBuilder<TodoBloc, TodoState>(
+              buildWhen: (previous, current) =>
+                  current is GetTodoListLoading ||
+                  current is GetTodoListSuccess ||
+                  current is GetTodoListFailure,
+              builder: (context, state) {
+                if (state is GetTodoListSuccess) {
+                  if (state.todos.isEmpty) {
+                    return const EmptyTodoState();
+                  }
+                  final todos = state.todos;
+                  return Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Builder(
                       builder: (BuildContext parentContext) {
                         return ListView.builder(
                           itemCount: todos.length,
                           itemBuilder: (context, index) {
                             final todo = todos[index];
-                            debugPrint(todo.description);
+                            debugPrint(
+                              "TodoId: ${todo.todoId} Description: ${todo.description}",
+                            );
 
                             return Padding(
                               padding: const EdgeInsets.symmetric(
@@ -123,7 +164,7 @@ class TodoListScreen extends StatelessWidget {
                                         bottomLeft: Radius.circular(12),
                                       ),
                                     ),
-                                    child: TodoListTile(todoModel: todo),
+                                    child: TodoListTile(todoEntity: todo),
                                   ),
                                 ),
                               ),
@@ -131,22 +172,44 @@ class TodoListScreen extends StatelessWidget {
                           },
                         );
                       },
-                    );
-                  }
+                    ),
+                  );
+                }
 
-                  return const EmptyTodoState();
-                },
-              ),
+                return const EmptyTodoState();
+              },
             ),
 
-            if (authState is LoginLoading) CircularLoader(),
+            BlocBuilder<TodoBloc, TodoState>(
+              buildWhen: (_, current) =>
+                  current is GetTodoListLoading ||
+                  current is GetTodoListSuccess ||
+                  current is GetTodoListFailure,
+
+              builder: (context, state) {
+                if (state is GetTodoListLoading) {
+                  return const Positioned.fill(child: CircularLoader());
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+
+            /// 🔹 Global Auth Loader Overlay
+            BlocBuilder<LoginBloc, LoginState>(
+              builder: (context, authState) {
+                if (authState is LoginLoading) {
+                  return const CircularLoader();
+                }
+                return const SizedBox.shrink();
+              },
+            ),
           ],
         ),
       ),
     );
   }
 
-  void copyTodoContent(TodoModel todo, BuildContext parentContext) {
+  void copyTodoContent(TodoEntity todo, BuildContext parentContext) {
     Clipboard.setData(
       ClipboardData(
         text:
@@ -165,7 +228,7 @@ class TodoListScreen extends StatelessWidget {
     );
   }
 
-  Future shareTodoContent(TodoModel todo) async {
+  Future shareTodoContent(TodoEntity todo) async {
     try {
       final result = await SharePlus.instance.share(
         ShareParams(
@@ -190,7 +253,6 @@ class TodoListScreen extends StatelessWidget {
   }
 
   void deleteTodo(BuildContext context, BuildContext parentContext, int index) {
-    BlocProvider.of<TodoCubit>(context).removeTodo(index);
-    CustomSnackBar.showCustomSnackBar(parentContext, true, 'Todo deleted');
+    CustomSnackBar.showCustomSnackBar(parentContext, true, 'To be implemented');
   }
 }

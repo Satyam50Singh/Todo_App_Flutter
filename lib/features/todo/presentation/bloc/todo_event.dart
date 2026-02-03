@@ -14,3 +14,7 @@ class AddTodoRequested extends TodoEvent {
     required this.dueDate,
   });
 }
+
+class GetTodoListRequested extends TodoEvent {
+  GetTodoListRequested();
+}

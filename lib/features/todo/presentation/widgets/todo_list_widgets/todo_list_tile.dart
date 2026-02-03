@@ -1,14 +1,14 @@
 import 'dart:convert';
 
-import 'package:auth_app/features/todo/data/models/todo_model.dart';
+import 'package:auth_app/features/todo/domain/entities/todo_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 
 class TodoListTile extends StatelessWidget {
-  final TodoModel todoModel;
+  final TodoEntity todoEntity;
 
-  const TodoListTile({super.key, required this.todoModel});
+  const TodoListTile({super.key, required this.todoEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class TodoListTile extends StatelessWidget {
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       leading: const Icon(Icons.check_circle_outline, color: Colors.purple),
       title: Text(
-        todoModel.title,
+        todoEntity.title,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
         style: Theme.of(
@@ -31,20 +31,20 @@ class TodoListTile extends StatelessWidget {
             controller: QuillController(
               readOnly: true,
               document: Document.fromDelta(
-                Delta.fromJson(jsonDecode(todoModel.description)),
+                Delta.fromJson(jsonDecode(todoEntity.description)),
               ),
               selection: const TextSelection.collapsed(offset: 0),
             ),
             // read: true,
           ),
           const SizedBox(height: 12),
-          if (todoModel.dueDate.isNotEmpty)
+          if (todoEntity.dueDate.isNotEmpty)
             Row(
               children: [
                 const Icon(Icons.calendar_month, size: 18, color: Colors.red),
                 const SizedBox(width: 4),
                 Text(
-                  "Due Date: ${todoModel.dueDate}",
+                  "Due Date: ${todoEntity.dueDate}",
                   style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
                 ),
               ],

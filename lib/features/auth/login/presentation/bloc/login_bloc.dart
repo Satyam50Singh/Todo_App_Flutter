@@ -40,7 +40,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     );
 
     result.fold(
-      (failure) => emit(LoginFailure(errorMessage: failure.toString())),
+      (failure) => emit(LoginFailure(errorMessage: failure.errorMessage)),
       (user) => emit(
         LoginSuccess(
           message: 'Welcome ${user.username.toUpperCase()}',

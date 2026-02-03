@@ -1,4 +1,5 @@
-import 'package:auth_app/features/todo/data/models/add_todo_response/add_todo_response_model.dart';
+import '../models/add_todo_response/add_todo_response_model.dart';
+import '../models/get_todos_response/get_todo_response_model.dart';
 
 abstract class TodoRemoteDatasource {
   Future<AddTodoResponseModel> addTodo(
@@ -7,4 +8,6 @@ abstract class TodoRemoteDatasource {
     String description,
     String dueDate,
   );
+
+  Future<GetTodoResponseModel> getTodo(String userId);
 }

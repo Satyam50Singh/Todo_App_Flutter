@@ -59,6 +59,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
               true,
               state.message ?? 'Todo Added Successfully!',
             );
+            Navigator.pop(context, true);
           }
         },
         builder: (context, state) {

@@ -5,7 +5,7 @@ import '../../../../../core/error/exceptions.dart';
 import '../../domain/entities/register_entity.dart';
 import '../../domain/repositories/register_repository.dart';
 import '../datasources/register_remote_data_source.dart';
-import '../models/register/register_response_model.dart';
+import '../models/register_response_model/register_response_model.dart';
 
 class RegisterRepositoryImpl extends BaseRepository
     implements RegisterRepository {
@@ -31,11 +31,13 @@ class RegisterRepositoryImpl extends BaseRepository
             mobileNumber,
           );
 
+      final registerDataModel = registerResponseModel.data;
+
       return RegisterEntity(
         status: registerResponseModel.status ?? 0,
         message: registerResponseModel.message ?? '',
         errorMsg: registerResponseModel.errorMsg ?? '',
-        loginMessage: registerResponseModel.loginMessage ?? '',
+        loginMessage: registerDataModel?.loginMessage ?? '',
       );
     });
   }

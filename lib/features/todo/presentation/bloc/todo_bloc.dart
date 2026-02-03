@@ -1,7 +1,10 @@
 import 'package:auth_app/features/todo/domain/usecases/add_todo_usecase.dart';
+import 'package:auth_app/features/todo/domain/usecases/get_todo_usecase.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/usecase/params.dart';
+import '../../domain/entities/todo_entity.dart';
 import '../../domain/usecases/add_todo_params.dart';
 
 part 'todo_event.dart';
@@ -9,16 +12,17 @@ part 'todo_state.dart';
 
 class TodoBloc extends Bloc<TodoEvent, TodoState> {
   final AddTodoUseCase _addTodoUseCase;
+  final GetTodoUseCase _getTodoUseCase;
 
-  TodoBloc(this._addTodoUseCase) : super(TodoInitial()) {
+  TodoBloc(this._addTodoUseCase, this._getTodoUseCase) : super(TodoInitial()) {
     on<AddTodoRequested>(_onAddTodoRequested);
+    on<GetTodoListRequested>(_onGetTodoListRequested);
   }
 
   void _onAddTodoRequested(
     AddTodoRequested event,
     Emitter<TodoState> emit,
   ) async {
-    print('Add Todo Requested');
     final String title = event.title.trim();
     final String description = event.description.trim();
     final String dueDate = event.dueDate.trim();
@@ -27,6 +31,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
     if (errMsg != null) {
       emit(AddTodoFailure(errorMsg: errMsg));
+      return;
     }
 
     emit(AddTodoLoading('Loading...'));
@@ -40,7 +45,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     }
 
     result.fold(
-      (failure) => emit(AddTodoFailure(errorMsg: failure.toString())),
+      (failure) => emit(AddTodoFailure(errorMsg: failure.errorMessage)),
       (response) => emit(AddTodoSuccess(message: response.message)),
     );
   }
@@ -53,10 +58,23 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     if (description.isEmpty) {
       return 'Description cannot be empty';
     }
-
-    // if (dueDate.isEmpty) {
-    //   return 'Due date cannot be empty';
-    // }
     return null;
+  }
+
+  void _onGetTodoListRequested(
+    GetTodoListRequested event,
+    Emitter<TodoState> emit,
+  ) async {
+    emit(GetTodoListLoading('Loading...'));
+
+    final result = await _getTodoUseCase.call(NoParams());
+
+    if (kDebugMode) {
+      print(result);
+    }
+    result.fold(
+      (failure) => emit(GetTodoListFailure(errorMsg: failure.errorMessage)),
+      (response) => emit(GetTodoListSuccess(todos: response)),
+    );
   }
 }
