@@ -63,13 +63,13 @@ class _TodoListScreenState extends State<TodoListScreen> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Pallete.gradient1,
           onPressed: () {
-            final result = Navigator.pushNamed(
+            Navigator.pushNamed(
               context,
               RouteName.addTodoScreen,
-            );
-            if (result == true) {
-              context.read<TodoBloc>().add(GetTodoListRequested());
-            }
+            ).then((value) => {
+              if (value == true)
+                BlocProvider.of<TodoBloc>(context).add(GetTodoListRequested())
+            });
           },
           tooltip: "Add Todo",
           child: Icon(Icons.add, color: Colors.white),
@@ -157,11 +157,17 @@ class _TodoListScreenState extends State<TodoListScreen> {
                           );
                         },
                       );
+                    } else {
+                      return const EmptyTodoState();
                     }
                   }
 
                   if (state is GetTodoListFailure) {
-                    debugPrint("GetTodoListFailure: ${state.errorMsg}");
+                    CustomSnackBar.showCustomSnackBar(
+                      context,
+                      false,
+                      state.errorMsg ?? 'No Todos Available!',
+                    );
                     return const EmptyTodoState();
                   }
 
@@ -170,7 +176,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
               ),
             ),
 
-            if (authState is LoginLoading) CircularLoader(),
+            if (authState is LoginLoading) const CircularLoader(),
           ],
         ),
       ),

@@ -55,7 +55,7 @@ class TodoRepositoryImpl extends BaseRepository implements TodoRepository {
                 title: model.todoTitle ?? '',
                 description: model.description ?? '',
                 dueDate: model.dueDate ?? '',
-                RemainingDays: model.remainingDays ?? 0,
+                remainingDays: model.remainingDays ?? 0,
               ),
             )
             .toList();

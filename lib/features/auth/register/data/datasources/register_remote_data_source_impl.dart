@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:auth_app/features/auth/register/data/datasources/register_remote_data_source.dart';
-import 'package:auth_app/features/auth/register/data/models/register/register_response_model.dart';
 
 import '../../../../../core/network/base_api_services.dart';
 import '../../../../../core/network/network_constants.dart';
 import '../../../../../core/utils/constants.dart';
+import '../models/register_response_model/register_response_model.dart';
 
 class RegisterRemoteDataSourceImpl implements RegisterRemoteDataSource {
   final BaseApiServices _apiServices;
