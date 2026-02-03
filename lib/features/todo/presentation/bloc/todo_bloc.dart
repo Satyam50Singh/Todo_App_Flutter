@@ -31,6 +31,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
     if (errMsg != null) {
       emit(AddTodoFailure(errorMsg: errMsg));
+      return;
     }
 
     emit(AddTodoLoading('Loading...'));
@@ -44,8 +45,11 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     }
 
     result.fold(
-      (failure) => emit(AddTodoFailure(errorMsg: failure.toString())),
-      (response) => emit(AddTodoSuccess(message: response.message)),
+      (failure) => emit(AddTodoFailure(errorMsg: failure.errorMessage)),
+      (response) {
+        emit(AddTodoSuccess(message: response.message));
+        add(GetTodoListRequested());
+      },
     );
   }
 
@@ -72,7 +76,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       print(result);
     }
     result.fold(
-      (failure) => emit(GetTodoListFailure(errorMsg: failure.toString())),
+      (failure) => emit(GetTodoListFailure(errorMsg: failure.errorMessage)),
       (response) => emit(GetTodoListSuccess(todos: response)),
     );
   }

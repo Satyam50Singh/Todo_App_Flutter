@@ -75,7 +75,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
               child: BlocBuilder<TodoBloc, TodoState>(
                 builder: (context, state) {
                   if (state is GetTodoListLoading) {
-                    CircularLoader();
+                    return const CircularLoader();
                   }
 
                   if (state is GetTodoListSuccess) {
@@ -88,7 +88,9 @@ class _TodoListScreenState extends State<TodoListScreen> {
                             itemCount: todos.length,
                             itemBuilder: (context, index) {
                               final todo = todos[index];
-                              debugPrint("TodoId: ${todo.todoId} Description: ${todo.description}");
+                              debugPrint(
+                                "TodoId: ${todo.todoId} Description: ${todo.description}",
+                              );
 
                               return Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -154,9 +156,10 @@ class _TodoListScreenState extends State<TodoListScreen> {
 
                   if (state is GetTodoListFailure) {
                     debugPrint("GetTodoListFailure: ${state.errorMsg}");
+                    return const EmptyTodoState();
                   }
 
-                  return const EmptyTodoState();
+                  return const SizedBox.shrink();
                 },
               ),
             ),
