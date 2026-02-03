@@ -5,13 +5,11 @@ class CircularLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned.fill(
-      child: AbsorbPointer(
-        child: Container(
-          color: Colors.black.withOpacity(0.5),
-          alignment: Alignment.center,
-          child: Center(child: CircularProgressIndicator()),
-        ),
+    return AbsorbPointer(
+      child: Container(
+        color: Colors.black.withOpacity(0.5),
+        alignment: Alignment.center,
+        child: Center(child: CircularProgressIndicator()),
       ),
     );
   }

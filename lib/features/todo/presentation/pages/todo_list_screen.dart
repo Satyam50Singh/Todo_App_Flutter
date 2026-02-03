@@ -36,24 +36,40 @@ class _TodoListScreenState extends State<TodoListScreen> {
   Widget build(BuildContext context) {
     final authState = context.watch<LoginBloc>().state;
 
-    return BlocListener<LoginBloc, LoginState>(
-      listener: (context, state) {
-        if (state is LogoutSuccess) {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            RouteName.loginScreen,
-            (route) => false,
-          );
-        }
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<LoginBloc, LoginState>(
+          listener: (context, state) {
+            if (state is LogoutSuccess) {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                RouteName.loginScreen,
+                (route) => false,
+              );
+            }
 
-        if (state is LogoutFailure) {
-          CustomSnackBar.showCustomSnackBar(
-            context,
-            false,
-            state.errorMessage ?? 'Logout Failed!',
-          );
-        }
-      },
+            if (state is LogoutFailure) {
+              CustomSnackBar.showCustomSnackBar(
+                context,
+                false,
+                state.errorMessage ?? 'Logout Failed!',
+              );
+            }
+          },
+        ),
+
+        BlocListener<TodoBloc, TodoState>(
+          listener: (context, state) {
+            if (state is GetTodoListFailure) {
+              CustomSnackBar.showCustomSnackBar(
+                context,
+                false,
+                state.errorMsg ?? 'Failed to load todos',
+              );
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         appBar: TodoListAppBar(
           onPressed: () {
@@ -63,120 +79,130 @@ class _TodoListScreenState extends State<TodoListScreen> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Pallete.gradient1,
           onPressed: () {
-            Navigator.pushNamed(
-              context,
-              RouteName.addTodoScreen,
-            ).then((value) => {
-              if (value == true)
-                BlocProvider.of<TodoBloc>(context).add(GetTodoListRequested())
-            });
+            Navigator.pushNamed(context, RouteName.addTodoScreen).then(
+              (value) => {
+                if (value == true)
+                  context.read<TodoBloc>().add(GetTodoListRequested()),
+              },
+            );
           },
           tooltip: "Add Todo",
           child: Icon(Icons.add, color: Colors.white),
         ),
         body: Stack(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-              child: BlocBuilder<TodoBloc, TodoState>(
-                builder: (context, state) {
-                  if (state is GetTodoListLoading) {
-                    return const CircularLoader();
-                  }
-
-                  if (state is GetTodoListSuccess) {
-                    if (state.todos.isNotEmpty) {
-                      final todos = state.todos;
-
-                      return Builder(
-                        builder: (BuildContext parentContext) {
-                          return ListView.builder(
-                            itemCount: todos.length,
-                            itemBuilder: (context, index) {
-                              final todo = todos[index];
-                              debugPrint(
-                                "TodoId: ${todo.todoId} Description: ${todo.description}",
-                              );
-
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 4.0,
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: Slidable(
-                                    key: ValueKey(todo.title),
-                                    endActionPane: ActionPane(
-                                      motion: const DrawerMotion(),
-                                      extentRatio: 0.20,
-                                      children: [
-                                        TodoSlidableAction(
-                                          todoActionType: TodoActionType.delete,
-                                          onPressed: (_) => deleteTodo(
-                                            context,
-                                            parentContext,
-                                            index,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    startActionPane: ActionPane(
-                                      motion: const StretchMotion(),
-                                      extentRatio: 0.40,
-                                      children: [
-                                        TodoSlidableAction(
-                                          todoActionType: TodoActionType.copy,
-                                          onPressed: (_) => copyTodoContent(
-                                            todo,
-                                            parentContext,
-                                          ),
-                                        ),
-                                        TodoSlidableAction(
-                                          todoActionType: TodoActionType.share,
-                                          onPressed: (_) async {
-                                            await shareTodoContent(todo);
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                    child: Card(
-                                      margin: EdgeInsetsGeometry.all(1),
-                                      elevation: 1,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(12),
-                                          bottomLeft: Radius.circular(12),
-                                        ),
-                                      ),
-                                      child: TodoListTile(todoEntity: todo),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      );
-                    } else {
-                      return const EmptyTodoState();
-                    }
-                  }
-
-                  if (state is GetTodoListFailure) {
-                    CustomSnackBar.showCustomSnackBar(
-                      context,
-                      false,
-                      state.errorMsg ?? 'No Todos Available!',
-                    );
+            BlocBuilder<TodoBloc, TodoState>(
+              buildWhen: (previous, current) =>
+                  current is GetTodoListLoading ||
+                  current is GetTodoListSuccess ||
+                  current is GetTodoListFailure,
+              builder: (context, state) {
+                if (state is GetTodoListSuccess) {
+                  if (state.todos.isEmpty) {
                     return const EmptyTodoState();
                   }
+                  final todos = state.todos;
+                  return Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Builder(
+                      builder: (BuildContext parentContext) {
+                        return ListView.builder(
+                          itemCount: todos.length,
+                          itemBuilder: (context, index) {
+                            final todo = todos[index];
+                            debugPrint(
+                              "TodoId: ${todo.todoId} Description: ${todo.description}",
+                            );
 
-                  return const SizedBox.shrink();
-                },
-              ),
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 4.0,
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Slidable(
+                                  key: ValueKey(todo.title),
+                                  endActionPane: ActionPane(
+                                    motion: const DrawerMotion(),
+                                    extentRatio: 0.20,
+                                    children: [
+                                      TodoSlidableAction(
+                                        todoActionType: TodoActionType.delete,
+                                        onPressed: (_) => deleteTodo(
+                                          context,
+                                          parentContext,
+                                          index,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  startActionPane: ActionPane(
+                                    motion: const StretchMotion(),
+                                    extentRatio: 0.40,
+                                    children: [
+                                      TodoSlidableAction(
+                                        todoActionType: TodoActionType.copy,
+                                        onPressed: (_) => copyTodoContent(
+                                          todo,
+                                          parentContext,
+                                        ),
+                                      ),
+                                      TodoSlidableAction(
+                                        todoActionType: TodoActionType.share,
+                                        onPressed: (_) async {
+                                          await shareTodoContent(todo);
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  child: Card(
+                                    margin: EdgeInsetsGeometry.all(1),
+                                    elevation: 1,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(12),
+                                        bottomLeft: Radius.circular(12),
+                                      ),
+                                    ),
+                                    child: TodoListTile(todoEntity: todo),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  );
+                }
+
+                return const EmptyTodoState();
+              },
             ),
 
-            if (authState is LoginLoading) const CircularLoader(),
+            BlocBuilder<TodoBloc, TodoState>(
+              buildWhen: (_, current) =>
+                  current is GetTodoListLoading ||
+                  current is GetTodoListSuccess ||
+                  current is GetTodoListFailure,
+
+              builder: (context, state) {
+                if (state is GetTodoListLoading) {
+                  return const Positioned.fill(child: CircularLoader());
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+
+            /// 🔹 Global Auth Loader Overlay
+            BlocBuilder<LoginBloc, LoginState>(
+              builder: (context, authState) {
+                if (authState is LoginLoading) {
+                  return const CircularLoader();
+                }
+                return const SizedBox.shrink();
+              },
+            ),
           ],
         ),
       ),
