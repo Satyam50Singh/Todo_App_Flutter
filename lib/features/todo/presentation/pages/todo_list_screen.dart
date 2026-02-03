@@ -4,6 +4,8 @@ import 'package:auth_app/core/utils/snackbar_utils.dart';
 import 'package:auth_app/core/utils/utils.dart';
 import 'package:auth_app/core/widgets/circular_loader.dart';
 import 'package:auth_app/features/auth/login/presentation/bloc/login_bloc.dart';
+import 'package:auth_app/features/todo/domain/entities/todo_entity.dart';
+import 'package:auth_app/features/todo/presentation/bloc/todo_bloc.dart';
 import 'package:auth_app/features/todo/presentation/widgets/todo_list_widgets/empty_todo_state.dart';
 import 'package:auth_app/features/todo/presentation/widgets/todo_list_widgets/todo_list_app_bar.dart';
 import 'package:auth_app/features/todo/presentation/widgets/todo_list_widgets/todo_list_tile.dart';
@@ -15,11 +17,20 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../../core/theme/pallete.dart';
-import '../../data/models/todo_model.dart';
-import '../cubit/todo_cubit.dart';
 
-class TodoListScreen extends StatelessWidget {
+class TodoListScreen extends StatefulWidget {
   const TodoListScreen({super.key});
+
+  @override
+  State<TodoListScreen> createState() => _TodoListScreenState();
+}
+
+class _TodoListScreenState extends State<TodoListScreen> {
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<TodoBloc>(context).add(GetTodoListRequested());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,77 +72,88 @@ class TodoListScreen extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-              child: BlocBuilder<TodoCubit, List<TodoModel>>(
-                builder: (context, todos) {
-                  // If there are todos, show them
-                  if (todos.isNotEmpty) {
-                    return Builder(
-                      builder: (BuildContext parentContext) {
-                        return ListView.builder(
-                          itemCount: todos.length,
-                          itemBuilder: (context, index) {
-                            final todo = todos[index];
-                            debugPrint(todo.description);
+              child: BlocBuilder<TodoBloc, TodoState>(
+                builder: (context, state) {
+                  if (state is GetTodoListLoading) {
+                    CircularLoader();
+                  }
 
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 4.0,
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Slidable(
-                                  key: ValueKey(todo.title),
-                                  endActionPane: ActionPane(
-                                    motion: const DrawerMotion(),
-                                    extentRatio: 0.20,
-                                    children: [
-                                      TodoSlidableAction(
-                                        todoActionType: TodoActionType.delete,
-                                        onPressed: (_) => deleteTodo(
-                                          context,
-                                          parentContext,
-                                          index,
+                  if (state is GetTodoListSuccess) {
+                    if (state.todos.isNotEmpty) {
+                      final todos = state.todos;
+
+                      return Builder(
+                        builder: (BuildContext parentContext) {
+                          return ListView.builder(
+                            itemCount: todos.length,
+                            itemBuilder: (context, index) {
+                              final todo = todos[index];
+                              debugPrint("TodoId: ${todo.todoId} Description: ${todo.description}");
+
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 4.0,
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Slidable(
+                                    key: ValueKey(todo.title),
+                                    endActionPane: ActionPane(
+                                      motion: const DrawerMotion(),
+                                      extentRatio: 0.20,
+                                      children: [
+                                        TodoSlidableAction(
+                                          todoActionType: TodoActionType.delete,
+                                          onPressed: (_) => deleteTodo(
+                                            context,
+                                            parentContext,
+                                            index,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  startActionPane: ActionPane(
-                                    motion: const StretchMotion(),
-                                    extentRatio: 0.40,
-                                    children: [
-                                      TodoSlidableAction(
-                                        todoActionType: TodoActionType.copy,
-                                        onPressed: (_) => copyTodoContent(
-                                          todo,
-                                          parentContext,
-                                        ),
-                                      ),
-                                      TodoSlidableAction(
-                                        todoActionType: TodoActionType.share,
-                                        onPressed: (_) async {
-                                          await shareTodoContent(todo);
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  child: Card(
-                                    margin: EdgeInsetsGeometry.all(1),
-                                    elevation: 1,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(12),
-                                        bottomLeft: Radius.circular(12),
-                                      ),
+                                      ],
                                     ),
-                                    child: TodoListTile(todoModel: todo),
+                                    startActionPane: ActionPane(
+                                      motion: const StretchMotion(),
+                                      extentRatio: 0.40,
+                                      children: [
+                                        TodoSlidableAction(
+                                          todoActionType: TodoActionType.copy,
+                                          onPressed: (_) => copyTodoContent(
+                                            todo,
+                                            parentContext,
+                                          ),
+                                        ),
+                                        TodoSlidableAction(
+                                          todoActionType: TodoActionType.share,
+                                          onPressed: (_) async {
+                                            await shareTodoContent(todo);
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    child: Card(
+                                      margin: EdgeInsetsGeometry.all(1),
+                                      elevation: 1,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(12),
+                                          bottomLeft: Radius.circular(12),
+                                        ),
+                                      ),
+                                      child: TodoListTile(todoEntity: todo),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    );
+                              );
+                            },
+                          );
+                        },
+                      );
+                    }
+                  }
+
+                  if (state is GetTodoListFailure) {
+                    debugPrint("GetTodoListFailure: ${state.errorMsg}");
                   }
 
                   return const EmptyTodoState();
@@ -146,7 +168,7 @@ class TodoListScreen extends StatelessWidget {
     );
   }
 
-  void copyTodoContent(TodoModel todo, BuildContext parentContext) {
+  void copyTodoContent(TodoEntity todo, BuildContext parentContext) {
     Clipboard.setData(
       ClipboardData(
         text:
@@ -165,7 +187,7 @@ class TodoListScreen extends StatelessWidget {
     );
   }
 
-  Future shareTodoContent(TodoModel todo) async {
+  Future shareTodoContent(TodoEntity todo) async {
     try {
       final result = await SharePlus.instance.share(
         ShareParams(
@@ -190,7 +212,6 @@ class TodoListScreen extends StatelessWidget {
   }
 
   void deleteTodo(BuildContext context, BuildContext parentContext, int index) {
-    BlocProvider.of<TodoCubit>(context).removeTodo(index);
-    CustomSnackBar.showCustomSnackBar(parentContext, true, 'Todo deleted');
+    CustomSnackBar.showCustomSnackBar(parentContext, true, 'To be implemented');
   }
 }

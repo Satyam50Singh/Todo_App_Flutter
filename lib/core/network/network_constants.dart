@@ -8,5 +8,5 @@ class NetworkConstants {
   static const String addTodo = '/todo/add_todo';
   static const String deleteTodo = '/todo/delete_todo';
   static const String updateTodo = '/todo/update_todo';
-  static const String getTodos = '/todo/get_all_todo';
+  static const String getTodos = '/todo/get_todo';
 }
