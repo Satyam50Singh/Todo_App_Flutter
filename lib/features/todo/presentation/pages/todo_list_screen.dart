@@ -63,7 +63,13 @@ class _TodoListScreenState extends State<TodoListScreen> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Pallete.gradient1,
           onPressed: () {
-            Navigator.pushNamed(context, RouteName.addTodoScreen);
+            final result = Navigator.pushNamed(
+              context,
+              RouteName.addTodoScreen,
+            );
+            if (result == true) {
+              context.read<TodoBloc>().add(GetTodoListRequested());
+            }
           },
           tooltip: "Add Todo",
           child: Icon(Icons.add, color: Colors.white),
