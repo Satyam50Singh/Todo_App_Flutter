@@ -1,5 +1,6 @@
 import 'package:auth_app/core/device/device_id_provider.dart';
 import 'package:auth_app/core/network/interceptors/interceptor.dart';
+import 'package:auth_app/core/network/network_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
@@ -24,8 +25,10 @@ class AuthInterceptor implements Interceptor {
     final token = await tokenStorage.getAccessToken();
     final deviceId = await _deviceIdProvider.getDeviceId();
 
-    if (token != null && token.isNotEmpty) {
-      request.headers['Authorization'] = 'Bearer $token';
+    if (!request.url.path.contains(NetworkConstants.authRefreshToken)) {
+      if (token != null && token.isNotEmpty) {
+        request.headers['Authorization'] = 'Bearer $token';
+      }
     }
 
     request.headers['X-Device-Id'] = deviceId;

@@ -3,7 +3,9 @@ import 'package:auth_app/core/device/device_id_provider_impl.dart';
 import 'package:auth_app/core/network/auth_storage/secure_token_storage.dart';
 import 'package:auth_app/core/network/intercepted_http_client.dart';
 import 'package:auth_app/core/network/interceptors/auth_interceptor.dart';
+import 'package:auth_app/core/network/interceptors/refresh_token_interceptor.dart';
 import 'package:auth_app/core/network/network_services_api.dart';
+import 'package:auth_app/core/network/services/auth_refresh_service.dart';
 import 'package:auth_app/core/network/user_storage/user_storage_impl.dart';
 import 'package:auth_app/core/utils/validations.dart';
 import 'package:auth_app/features/auth/login/data/datasources/login_remote_data_source.dart';
@@ -36,6 +38,7 @@ import '../../features/todo/domain/repositories/todo_repository.dart';
 import '../../features/todo/domain/usecases/get_todo_usecase.dart';
 import '../../features/todo/presentation/cubit/todo_cubit.dart';
 import '../network/auth_storage/token_storage.dart';
+import '../network/services/auth_refresh_service_impl.dart';
 import '../network/user_storage/user_storage.dart';
 import '../startup/app_startup.dart';
 import '../storage/secure_storage.dart';
@@ -59,6 +62,11 @@ Future<void> init() async {
   // Register Network Layer
   sl.registerLazySingleton<NetworkServicesApi>(
     () => NetworkServicesApi(sl<TokenStorage>(), sl<InterceptedHttpClient>()),
+  );
+  final client = http.Client();
+
+  sl.registerLazySingleton<AuthRefreshService>(
+    () => AuthRefreshServiceImpl(sl<TokenStorage>(), client),
   );
 
   // Remote Data Sources
@@ -123,8 +131,20 @@ Future<void> init() async {
   sl.registerLazySingleton<AuthInterceptor>(
     () => AuthInterceptor(sl<TokenStorage>(), sl<DeviceIdProvider>()),
   );
+
+  sl.registerLazySingleton<RefreshTokenInterceptor>(
+    () => RefreshTokenInterceptor(
+      sl<TokenStorage>(),
+      sl<AuthRefreshService>(),
+      client,
+    ),
+  );
+
   sl.registerLazySingleton<InterceptedHttpClient>(
-    () => InterceptedHttpClient(http.Client(), [sl<AuthInterceptor>()]),
+    () => InterceptedHttpClient(http.Client(), [
+      sl<AuthInterceptor>(),
+      sl<RefreshTokenInterceptor>(),
+    ]),
   );
   await sl<DeviceIdProvider>().getDeviceId();
 }
