@@ -130,7 +130,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                     ],
                   ),
                 ),
-                if (state is AddTodoLoading) CircularLoader(),
+                if (state is TodoLoading) CircularLoader(),
               ],
             ),
           );
