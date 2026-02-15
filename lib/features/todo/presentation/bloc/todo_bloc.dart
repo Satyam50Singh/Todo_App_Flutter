@@ -8,6 +8,7 @@ import '../../domain/entities/todo_entity.dart';
 import '../../domain/usecases/add_todo_params.dart';
 
 part 'todo_event.dart';
+
 part 'todo_state.dart';
 
 class TodoBloc extends Bloc<TodoEvent, TodoState> {
@@ -17,12 +18,11 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   TodoBloc(this._addTodoUseCase, this._getTodoUseCase) : super(TodoInitial()) {
     on<AddTodoRequested>(_onAddTodoRequested);
     on<GetTodoListRequested>(_onGetTodoListRequested);
+    on<DeleteTodoRequested>(_onDeleteTodoRequested);
   }
 
-  void _onAddTodoRequested(
-    AddTodoRequested event,
-    Emitter<TodoState> emit,
-  ) async {
+  void _onAddTodoRequested(AddTodoRequested event,
+      Emitter<TodoState> emit,) async {
     final String title = event.title.trim();
     final String description = event.description.trim();
     final String dueDate = event.dueDate.trim();
@@ -34,7 +34,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       return;
     }
 
-    emit(AddTodoLoading('Loading...'));
+    emit(TodoLoading('Loading...'));
 
     final result = await _addTodoUseCase.call(
       AddTodoParams(title: title, description: description, dueDate: dueDate),
@@ -45,8 +45,8 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     }
 
     result.fold(
-      (failure) => emit(AddTodoFailure(errorMsg: failure.errorMessage)),
-      (response) => emit(AddTodoSuccess(message: response.message)),
+          (failure) => emit(AddTodoFailure(errorMsg: failure.errorMessage)),
+          (response) => emit(AddTodoSuccess(message: response.message)),
     );
   }
 
@@ -61,11 +61,9 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     return null;
   }
 
-  void _onGetTodoListRequested(
-    GetTodoListRequested event,
-    Emitter<TodoState> emit,
-  ) async {
-    emit(GetTodoListLoading('Loading...'));
+  void _onGetTodoListRequested(GetTodoListRequested event,
+      Emitter<TodoState> emit,) async {
+    emit(TodoLoading('Loading...'));
 
     final result = await _getTodoUseCase.call(NoParams());
 
@@ -73,8 +71,14 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       print(result);
     }
     result.fold(
-      (failure) => emit(GetTodoListFailure(errorMsg: failure.errorMessage)),
-      (response) => emit(GetTodoListSuccess(todos: response)),
+          (failure) => emit(GetTodoListFailure(errorMsg: failure.errorMessage)),
+          (response) => emit(GetTodoListSuccess(todos: response)),
     );
   }
+
+  void _onDeleteTodoRequested(DeleteTodoRequested event,
+      Emitter<TodoState> emit,) async {
+    emit(TodoLoading('Loading...'));
+  }
+
 }

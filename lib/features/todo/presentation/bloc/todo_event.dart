@@ -18,3 +18,9 @@ class AddTodoRequested extends TodoEvent {
 class GetTodoListRequested extends TodoEvent {
   GetTodoListRequested();
 }
+
+class DeleteTodoRequested extends TodoEvent {
+  final int todoId;
+
+  DeleteTodoRequested(this.todoId);
+}

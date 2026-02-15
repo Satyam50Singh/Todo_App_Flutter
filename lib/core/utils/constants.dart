@@ -9,4 +9,6 @@ class Constants {
   static const String dueDate = 'dueDate';
   static const String userId = 'userId';
   static const String loginId = 'loginId';
+  static const String refreshToken = 'refreshtoken';
+
 }

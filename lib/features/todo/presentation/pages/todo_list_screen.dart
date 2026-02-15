@@ -93,7 +93,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
           children: [
             BlocBuilder<TodoBloc, TodoState>(
               buildWhen: (previous, current) =>
-                  current is GetTodoListLoading ||
+                  current is TodoLoading ||
                   current is GetTodoListSuccess ||
                   current is GetTodoListFailure,
               builder: (context, state) {
@@ -131,7 +131,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
                                         onPressed: (_) => deleteTodo(
                                           context,
                                           parentContext,
-                                          index,
+                                          todo.todoId,
                                         ),
                                       ),
                                     ],
@@ -182,12 +182,12 @@ class _TodoListScreenState extends State<TodoListScreen> {
 
             BlocBuilder<TodoBloc, TodoState>(
               buildWhen: (_, current) =>
-                  current is GetTodoListLoading ||
+                  current is TodoLoading ||
                   current is GetTodoListSuccess ||
                   current is GetTodoListFailure,
 
               builder: (context, state) {
-                if (state is GetTodoListLoading) {
+                if (state is TodoLoading) {
                   return const Positioned.fill(child: CircularLoader());
                 }
                 return const SizedBox.shrink();
@@ -252,7 +252,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
     }
   }
 
-  void deleteTodo(BuildContext context, BuildContext parentContext, int index) {
-    CustomSnackBar.showCustomSnackBar(parentContext, true, 'To be implemented');
+  void deleteTodo(BuildContext context, BuildContext parentContext, int todoId) {
+    context.read<TodoBloc>().add(DeleteTodoRequested(todoId));
   }
 }
